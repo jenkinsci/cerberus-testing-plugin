@@ -1,0 +1,297 @@
+package org.cerberus.launchcampaign.checkCampaign;
+
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.*;
+
+/**
+ * Represent object was return by cerberus to send status of campaign's execution
+ * @author ndeblock
+ *
+ */
+public class ResultCIDto {
+
+	@JsonProperty("message")
+	private String message;
+	
+	@JsonProperty("result")
+	private String result; // OK / KO
+	
+	@JsonProperty("ExecutionStart")
+	// ex date format 1970-01-01 01:00:00.0
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSS", timezone="GMT")
+	private Date executionStart;
+
+	@JsonProperty("ExecutionEnd")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSS", timezone="GMT")
+	private Date executionEnd;
+
+	@JsonProperty("messageType")
+	private String messageType; // OK / KO
+	
+	@JsonProperty("tag")
+	private String tag;
+	
+	@JsonProperty("NonOK_prio1_nbOfExecution")
+	private long nonOkPrio1;
+	@JsonProperty("NonOK_prio2_nbOfExecution")
+	private long nonOkPrio2;
+	@JsonProperty("NonOK_prio3_nbOfExecution")
+	private long nonOkPrio3;
+	@JsonProperty("NonOK_prio4_nbOfExecution")
+	private long nonOkPrio4;
+
+	@JsonProperty("CI_OK_prio1")
+	private double ciOkPrio1;
+	@JsonProperty("CI_OK_prio2")
+	private double ciOkPrio2;
+	@JsonProperty("CI_OK_prio3")
+	private double ciOkPrio3;
+	@JsonProperty("CI_OK_prio4")
+	private double ciOkPrio4;
+	@JsonProperty("CI_finalResult")
+	private double ciFinalResult;
+	
+	@JsonProperty("status_CA_nbOfExecution")
+	private long statusCA;
+	@JsonProperty("status_FA_nbOfExecution")
+	private long statusFA;
+	@JsonProperty("status_PE_nbOfExecution")
+	private long statusPE;
+	@JsonProperty("status_NA_nbOfExecution")
+	private long statusNA;
+	@JsonProperty("status_OK_nbOfExecution")
+	private long statusOK;
+	@JsonProperty("status_KO_nbOfExecution")
+	private long statusKO;
+	@JsonProperty("status_NE_nbOfExecution")
+	private long statusNE;
+
+	@JsonProperty("TOTAL_nbOfExecution")
+	private long total;
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	public Date getExecutionStart() {
+		return executionStart;
+	}
+
+	public void setExecutionStart(Date executionStart) {
+		this.executionStart = executionStart;
+	}
+
+	public Date getExecutionEnd() {
+		return executionEnd;
+	}
+
+	public void setExecutionEnd(Date executionEnd) {
+		this.executionEnd = executionEnd;
+	}
+
+	public String getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public long getNonOkPrio1() {
+		return nonOkPrio1;
+	}
+
+	public void setNonOkPrio1(long nonOkPrio1) {
+		this.nonOkPrio1 = nonOkPrio1;
+	}
+
+	public long getNonOkPrio2() {
+		return nonOkPrio2;
+	}
+
+	public void setNonOkPrio2(long nonOkPrio2) {
+		this.nonOkPrio2 = nonOkPrio2;
+	}
+
+	public long getNonOkPrio3() {
+		return nonOkPrio3;
+	}
+
+	public void setNonOkPrio3(long nonOkPrio3) {
+		this.nonOkPrio3 = nonOkPrio3;
+	}
+
+	public long getNonOkPrio4() {
+		return nonOkPrio4;
+	}
+
+	public void setNonOkPrio4(long nonOkPrio4) {
+		this.nonOkPrio4 = nonOkPrio4;
+	}
+
+	public double getCiOkPrio1() {
+		return ciOkPrio1;
+	}
+
+	public void setCiOkPrio1(double ciOkPrio1) {
+		this.ciOkPrio1 = ciOkPrio1;
+	}
+
+	public double getCiOkPrio2() {
+		return ciOkPrio2;
+	}
+
+	public void setCiOkPrio2(double ciOkPrio2) {
+		this.ciOkPrio2 = ciOkPrio2;
+	}
+
+	public double getCiOkPrio3() {
+		return ciOkPrio3;
+	}
+
+	public void setCiOkPrio3(double ciOkPrio3) {
+		this.ciOkPrio3 = ciOkPrio3;
+	}
+
+	public double getCiOkPrio4() {
+		return ciOkPrio4;
+	}
+
+	public void setCiOkPrio4(double ciOkPrio4) {
+		this.ciOkPrio4 = ciOkPrio4;
+	}
+
+	public double getCiFinalResult() {
+		return ciFinalResult;
+	}
+
+	public void setCiFinalResult(double ciFinalResult) {
+		this.ciFinalResult = ciFinalResult;
+	}
+
+	public long getStatusCA() {
+		return statusCA;
+	}
+
+	public void setStatusCA(long statusCA) {
+		this.statusCA = statusCA;
+	}
+
+	public long getStatusFA() {
+		return statusFA;
+	}
+
+	public void setStatusFA(long statusFA) {
+		this.statusFA = statusFA;
+	}
+
+	public long getStatusPE() {
+		return statusPE;
+	}
+
+	public void setStatusPE(long statusPE) {
+		this.statusPE = statusPE;
+	}
+
+	public long getStatusNA() {
+		return statusNA;
+	}
+
+	public void setStatusNA(long statusNA) {
+		this.statusNA = statusNA;
+	}
+
+	public long getStatusOK() {
+		return statusOK;
+	}
+
+	public void setStatusOK(long statusOK) {
+		this.statusOK = statusOK;
+	}
+
+	public long getStatusKO() {
+		return statusKO;
+	}
+
+	public void setStatusKO(long statusKO) {
+		this.statusKO = statusKO;
+	}
+
+	public long getStatusNE() {
+		return statusNE;
+	}
+
+	public void setStatusNE(long statusNE) {
+		this.statusNE = statusNE;
+	}
+
+	public long getTotal() {
+		return total;
+	}
+
+	public void setTotal(long total) {
+		this.total = total;
+	}
+	
+	
+	// *******************   some calculated field  *****************************
+	
+	/**
+	 * @return The total of executed test (OK + CA + FA + NA + KO)
+	 */
+	public long getTotalTestExecuted() {
+		return this.getStatusOK() + this.getStatusCA() + this.getStatusFA() + this.getStatusNA() + this.getStatusKO();
+	}
+	
+	/**
+	 * @return Total test waiting to execute (PE + NE)
+	 */
+	public long getTestToExecute() {
+		return this.getTotalTestExecuted() + this.getStatusPE() + this.getStatusNE();
+	}
+	
+	/**
+	 * @return Percent of test already executed by cerberus
+	 */
+	public int getPercentOfTestExecuted() {
+		if(this.getTestToExecute() == 0) return 0;
+		
+		return (int) ((this.getTotalTestExecuted() / (double) this.getTestToExecute()) * 100d);
+	}
+
+
+	public String logDetailExecution() {
+		return "Details : " +
+				"OK " + 	  this.getStatusOK() + 
+				" | CA " + 	  this.getStatusCA() + 
+				" | FA " + this.getStatusFA() +
+				" | NA " + this.getStatusNA() +
+				" | KO " + this.getStatusKO() +
+				" | PE " + this.getStatusPE() + 
+				" | NE " + this.getStatusNE();
+	}
+	
+	
+
+}

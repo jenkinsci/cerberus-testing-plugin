@@ -1,0 +1,24 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+	<!-- This jelly script is used for per-project configuration. See global.jelly 
+		for a general discussion about jelly script. -->
+
+	<!-- Creates a text field that shows the value of the "name" property. When 
+		submitted, it will be passed to the corresponding constructor parameter. -->
+	<f:entry title="Campaign to launch" field="campaignName" description="Campaign cerberus will launch">
+		<f:textbox />
+	</f:entry>
+	<f:entry title="Platform" field="platform" description="Platform Cerberus must use">
+		<f:textbox />
+	</f:entry>
+	<f:entry title="Environment" field="environment" description="Environment Cerberus must use">
+		<f:textbox />
+	</f:entry>
+	<f:entry title="Browser" field="browser" description="Browser than Cerberus will use to execute test. If empty, use the global attribute.">
+		<f:textbox />
+	</f:entry>
+	<f:entry title="Browser Version" field="browserVersion" description="Browser than Cerberus will use to execute test. If empty, use the global attribute.">
+		<f:textbox />
+	</f:entry>
+</j:jelly>
