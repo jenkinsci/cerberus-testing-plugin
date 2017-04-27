@@ -110,7 +110,7 @@ checkCampaignStatus.execute(resultDto -> {
 
 ## License
 
-Cerberus Copyright (C) 2016 Cerberus Testing
+Cerberus Copyright (C) 2017 Cerberus Testing
 
 This file is part of Cerberus.
 Cerberus is free software: you can redistribute it and/or modify

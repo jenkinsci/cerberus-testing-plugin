@@ -1,3 +1,22 @@
+/**
+ * Cerberus Copyright (C) 2013 - 2017 cerberustesting
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This file is part of Cerberus.
+ *
+ * Cerberus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Cerberus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Cerberus.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.cerberus.launchcampaign.checkCampaign;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -51,14 +70,18 @@ public class CheckCampaignStatusTest {
 		
 		final List<ResultCIDto> cptFinish= new ArrayList<>();
 		// execute
-		checkCampaignStatus.execute(
-				result -> {
-					// TODO FAIL
-					return false;
-				},
-				result -> {
+		checkCampaignStatus.execute(new CheckCampaignStatus.CheckCampaignEvent() {
+			@Override
+			public boolean checkCampaign(ResultCIDto result) {
+				return false;
+			}
+		}, 
+			new CheckCampaignStatus.ResultEvent() {
+				@Override
+				public void result(ResultCIDto result) {
 					cptFinish.add(result);
 				}
+			}
 		);
 		
 		assertThat("Campaign must be notify as finished", cptFinish.size(), is(1)); // test if campaign Is notify as Finished
@@ -85,17 +108,22 @@ public class CheckCampaignStatusTest {
 		final List<ResultCIDto> cptWaiting= new ArrayList<>();
 		final List<Integer> cptFinish= new ArrayList<>();
 		// execute
-		checkCampaignStatus.execute(
-				result -> {
-					if(!cptWaiting.isEmpty()) {
-						return false;
-					}
-					cptWaiting.add(result);
-					return true;
-				},
-				result -> {
+		checkCampaignStatus.execute(new CheckCampaignStatus.CheckCampaignEvent() {
+			@Override
+			public boolean checkCampaign(ResultCIDto result) {
+				if(!cptWaiting.isEmpty()) {
+					return false;
+				}
+				cptWaiting.add(result);
+				return true;
+			}
+		}, 
+			new CheckCampaignStatus.ResultEvent() {
+				@Override
+				public void result(ResultCIDto result) {
 					cptFinish.add(0);
 				}
+			}
 		);
 		
 		assertThat("Campaign must be waiting, and call 1st parameter of method execute", cptWaiting.size(), is(1));
@@ -116,13 +144,20 @@ public class CheckCampaignStatusTest {
 		
 		boolean exceptionOk=false;
 		try {
-			checkCampaignStatus.execute(
-					result -> {
-						return true;
-					},
-					result -> {
+			checkCampaignStatus.execute(new CheckCampaignStatus.CheckCampaignEvent() {
+				@Override
+				public boolean checkCampaign(ResultCIDto result) {
+					return true;
+				}
+			}, 
+				new CheckCampaignStatus.ResultEvent() {
+					@Override
+					public void result(ResultCIDto result) {
+						// nothing to do
 					}
+				}
 			);
+
 		} catch(FileNotFoundException e) {
 			exceptionOk=true;
 		}
