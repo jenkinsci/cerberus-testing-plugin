@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Cerberus.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cerberus.launchcampaign.executeCampaign;
+package org.cerberus.launchcampaign.executecampaign;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -25,6 +25,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import org.cerberus.launchcampaign.Constantes;
+import org.cerberus.launchcampaign.executecampaign.*;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockserver.client.server.MockServerClient;

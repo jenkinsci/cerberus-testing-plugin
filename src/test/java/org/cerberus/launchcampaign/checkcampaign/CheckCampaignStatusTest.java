@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Cerberus.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cerberus.launchcampaign.checkCampaign;
+package org.cerberus.launchcampaign.checkcampaign;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 import org.cerberus.launchcampaign.*;
+import org.cerberus.launchcampaign.checkcampaign.*;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockserver.client.server.MockServerClient;

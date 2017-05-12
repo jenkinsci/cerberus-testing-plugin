@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Cerberus.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cerberus.jenkinsci.plugins.executeCerberusTest;
+package org.cerberus.jenkinsci.plugins.executecerberustest;
 import org.apache.commons.lang.StringUtils;
-import org.cerberus.launchcampaign.checkCampaign.*;
-import org.cerberus.launchcampaign.executeCampaign.*;
+import org.cerberus.launchcampaign.checkcampaign.*;
+import org.cerberus.launchcampaign.executecampaign.*;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.*;
 
@@ -51,8 +51,8 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	private final String campaignName;
 	private final String platform;        
 	private final String environment;
-	private String browser;
-	private String browserVersion;
+	private final String browser;
+	private final String browserVersion;
 
 	// Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
 	@DataBoundConstructor
@@ -73,12 +73,12 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		final JenkinsLogger logger = new JenkinsLogger(listener.getLogger());
 
 		// overide attribute if local settings is empty
-		this.browser =   StringUtils.isEmpty(browser) ? getDescriptor().getBrowser() : browser; 
-		this.browserVersion = StringUtils.isEmpty(browserVersion) ? getDescriptor().getBrowserVersion() : browserVersion;
+		final String browser =   StringUtils.isEmpty(this.browser) ? getDescriptor().getBrowser() : this.browser; 
+		final String browserVersion = StringUtils.isEmpty(this.browserVersion) ? getDescriptor().getBrowserVersion() : this.browserVersion;
 
 		try {
 			// 1 - Launch cerberus campaign    		
-			ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(getDescriptor().getRobot(), getDescriptor().getSsIp(), 
+			final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(getDescriptor().getRobot(), getDescriptor().getSsIp(), 
 					environment, browser, browserVersion, platform, campaignName);
 			
 			logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + getDescriptor().getUrlCerberus() + " (" +  executeCampaignDto.buildUrl(getDescriptor().getUrlCerberus()) + ")");
@@ -90,7 +90,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 				checkCampaignStatus.execute(new CheckCampaignStatus.CheckCampaignEvent() {
 					
 					@Override
-					public boolean checkCampaign(ResultCIDto resultDto) {
+					public boolean checkCampaign(final ResultCIDto resultDto) {
 						logger.info(resultDto.getTotalTestExecuted() + " test executed ... ("+ resultDto.logDetailExecution() + ")");
 						logger.info(resultDto.getStatusPE() + resultDto.getStatusNE() + " test pending ...");
 						logger.info("cerberus message : " + resultDto.getMessage());
@@ -100,7 +100,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 				}, new CheckCampaignStatus.ResultEvent() {
 					
 					@Override
-					public void result(ResultCIDto resultDto) {
+					public void result(final ResultCIDto resultDto) {
 						// display result and shutdown
 						long timeToExecuteTest = resultDto.getExecutionEnd().getTime() - resultDto.getExecutionStart().getTime();
 						logger.info("---------------------------------------------------------------------------------------------");
@@ -130,17 +130,9 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	// Overridden for better type safety.
 	// If your plugin doesn't really define any property on Descriptor,
 	// you don't have to do this.
-	private DescriptorImpl descr;
 	@Override
 	public DescriptorImpl getDescriptor() {
-		try {
-			return (DescriptorImpl)super.getDescriptor();
-		} catch (NullPointerException e) {
-			if(descr == null) {
-				descr = new DescriptorImpl(true);
-			}
-			return descr;
-		}
+		return (DescriptorImpl) super.getDescriptor();
 	}
 
 	/**

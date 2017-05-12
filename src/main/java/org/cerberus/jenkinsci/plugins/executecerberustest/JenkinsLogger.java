@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Cerberus.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cerberus.jenkinsci.plugins.executeCerberusTest;
+package org.cerberus.jenkinsci.plugins.executecerberustest;
 
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;

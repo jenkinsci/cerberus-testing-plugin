@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Cerberus.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cerberus.launchcampaign.executeCampaign;
+package org.cerberus.launchcampaign.executecampaign;
 
 import java.io.IOException;
 import java.net.*;

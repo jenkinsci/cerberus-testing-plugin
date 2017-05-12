@@ -1,27 +1,27 @@
-# Execute Cerberus Test Plugin For Jenkins
+# Cerberus Jenkins Plugin
 
-This plugin allow : 
-* Launch a test campaign on cerberus
-* Wait Cerberus execute it
-* Display a report on console. Fail if a test is ko, else sucess.
+This plugin allows : 
+* To launch a test campaign on Cerberus
+* To wait Cerberus executes it
+* To display a report on console. Fail if a test is ko, else sucess.
 
 ## What is cerberus ?
 Cerberus is an open source, user friendly, **automated testing sofware**. See [website](https://www.cerberus-testing.org) for more information
 
 
 ## Get started
-* install plugin on Jenkins
-* Plugin add global parameter on Jenkins : 
+* Install plugin on Jenkins
+* Set parameters on "Manage Jenkins" screen : 
 ![build_parameter](docs/build_parameter.png "Build parameter")
 
 ### On Jenkins
-* To add an execution of a campaign cerberus on a job, add a new build step "Execute Cerberus Campaign", and configure parameter :
+* To add a campaign Cerberus execution on a job, add a new build step "Execute Cerberus Campaign", and set parameters :
 ![global_parameter](docs/global_parameter.png "Global parameter") 
 
 ### On Jenkinsfile
-* Just call `executeCerberusCampaigne` function with parameter :
-	* `campaignName` : Name of campaign to execute
-	* `platform` :  Paltform to execute (define into Cerberus)
+* Just call `executeCerberusCampaigne` function with parameters :
+	* `campaignName` : Campaign name to execute
+	* `platform` :  Platform to execute (define into Cerberus)
 	* `environment` :  Environment to execute (define into Cerberus)
 	* `browser` : Browser executed by Cerberus to test application. If `browser` is empty, use global settings of Cerberus plugin.
 	* `browserVersion` :  Browser version executed by Cerberus to test application. If `browserVersion` is empty, use global settings of Cerberus plugin.
@@ -30,14 +30,14 @@ Cerberus is an open source, user friendly, **automated testing sofware**. See [w
 pipeline {	
    ...
     stages {
-		.....				
-		stage('cerberus Test') {
-            steps {					
-                executeCerberusCampaign campaignName : "Test_campaign" , platform : "", environment : "QA", browser : "firefox", browserVersion : "47"
-            }
-        }		
 		...
-    }
+		stage('cerberus Test') {
+			steps {					
+				executeCerberusCampaign campaignName : "Test_campaign" , platform : "", environment : "QA", browser : "firefox", browserVersion : "47"
+			}
+		}		
+		...
+	}
 }
 ```
 
@@ -88,12 +88,12 @@ $ mvn -DdownloadSources=true -DdownloadJavadocs=true -DoutputDirectory=target/ec
 ### Code
 `ExecuteCerberusCampaign` is the main class call by Jenkins. 
 It use :
-* `ExecuteCampaign` who add cerberus campaign to Ceberus Queue.
+* `ExecuteCampaign` who add Cerberus campaign to Ceberus Queue.
 ```java
 executeCampaign.execute();
 ```
 
-* `CheckCampaignStatus` who check all 5 seconds status of campaign execution. When all test executed, job finished
+* `CheckCampaignStatus` who check all 5 seconds status of campaign execution. When all test executed, job is finished
 ```java
 checkCampaignStatus.execute(resultDto -> {	  
 	// display advancement
@@ -104,15 +104,16 @@ checkCampaignStatus.execute(resultDto -> {
 });
 ```
 
-`ExecuteCampaign` and `CheckCampaignStatus` are indepedant and could be used by other process than Jenkins.
+`ExecuteCampaign` and `CheckCampaignStatus` are independent and could be used by other process than Jenkins.
 
 
 
 ## License
 
-Cerberus Copyright (C) 2017 Cerberus Testing
+Cerberus Copyright (C) 2013 - 2017 cerberustesting
 
 This file is part of Cerberus.
+
 Cerberus is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
