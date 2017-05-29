@@ -106,19 +106,11 @@ public class ResultCIDto {
 	}
 
 	public Date getExecutionStart() {
-		return executionStart;
-	}
-
-	public void setExecutionStart(Date executionStart) {
-		this.executionStart = executionStart;
+		return (Date) executionStart.clone();
 	}
 
 	public Date getExecutionEnd() {
-		return executionEnd;
-	}
-
-	public void setExecutionEnd(Date executionEnd) {
-		this.executionEnd = executionEnd;
+		return (Date) executionEnd.clone();
 	}
 
 	public String getMessageType() {
