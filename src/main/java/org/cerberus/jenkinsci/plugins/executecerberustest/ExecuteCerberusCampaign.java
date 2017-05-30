@@ -20,6 +20,7 @@
 package org.cerberus.jenkinsci.plugins.executecerberustest;
 import org.apache.commons.lang.StringUtils;
 import org.cerberus.launchcampaign.checkcampaign.*;
+import org.cerberus.launchcampaign.event.LogEvent;
 import org.cerberus.launchcampaign.executecampaign.*;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.*;
@@ -53,19 +54,33 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	private final String environment;
 	private final String browser;
 	private final String browserVersion;
-
+ 
+	private final int screenshot; // default is 1
+	private final int verbose; // default is 1       
+	private final int pageSource; // default is Y
+	private final int seleniumLog; // default is Y
+	private final int timeOut; // default is 5000
+	private final int retries; // default is 0
+	private final String tag; // default is 'Jenkins--' + current timestamp
+		
 	// Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
 	@DataBoundConstructor
-	public ExecuteCerberusCampaign(final String campaignName, final String platform, final String environment, final String browser, final String browserVersion) {
+	public ExecuteCerberusCampaign(final String campaignName, final String platform, final String environment, final String browser, 
+			final String browserVersion, final int screenshot, final int verbose, final int pageSource, final int seleniumLog, 
+			final int timeOut, final int retries, String tag) {
 		this.campaignName = campaignName;
 		this.platform=platform;
 		this.environment=environment;
 		this.browser =  browser; 
 		this.browserVersion = browserVersion;
-	}
-
-	public String getCampaignName() {
-		return campaignName;
+		
+		this.screenshot = screenshot; // default is 1
+		this.verbose = verbose; // default is 1       
+		this.pageSource = pageSource; // default is Y
+		this.seleniumLog = seleniumLog; // default is Y
+		this.timeOut = timeOut; // default is 5000
+		this.retries = retries; // default is 0
+		this.tag = tag; 
 	}
 
 	@Override
@@ -79,13 +94,31 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		try {
 			// 1 - Launch cerberus campaign    		
 			final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(getDescriptor().getRobot(), getDescriptor().getSsIp(), 
-					environment, browser, browserVersion, platform, campaignName);
-			
-			logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + getDescriptor().getUrlCerberus() + " (" +  executeCampaignDto.buildUrl(getDescriptor().getUrlCerberus()) + ")");
-			final ExecuteCampaign executeCampaign = new ExecuteCampaign(getDescriptor().getUrlCerberus(), executeCampaignDto);
+					environment, browser, browserVersion, platform, campaignName, screenshot, verbose, pageSource, 
+					seleniumLog, timeOut, retries, tag);
+		
+			logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + getDescriptor().getUrlCerberus() + " with tag " + executeCampaignDto.getTagCerberus());
 
-			if(executeCampaign.execute()) {
+			String urlCerberusReport = getDescriptor().getUrlCerberus() + "/ReportingExecutionByTag.jsp?Tag=" + executeCampaignDto.getTagCerberus();
+			
+			LogEvent logEvent= new LogEvent() {				
+				@Override
+				public void log(String error, String warning) {
+					if(!StringUtils.isEmpty(warning)) {
+						logger.warning(warning);
+					}
+					if(!StringUtils.isEmpty(error)) {
+						logger.error(error);
+					}
+					
+				}
+			};
+			
+            final ExecuteCampaign executeCampaign = new ExecuteCampaign(getDescriptor().getUrlCerberus(), executeCampaignDto);
+			if(executeCampaign.execute(logEvent)) {
 				// 2 - check if cerberus campaign is finish
+				logger.info("Campaign is launched successfully. You can follow the report here : " +  urlCerberusReport);
+				
 				CheckCampaignStatus checkCampaignStatus = new CheckCampaignStatus(executeCampaignDto.getTagCerberus(), getDescriptor().getUrlCerberus(), getDescriptor().timeToRefreshCheckCampaignStatus, getDescriptor().timeOutForCampaignExecution);
 				checkCampaignStatus.execute(new CheckCampaignStatus.CheckCampaignEvent() {
 					
@@ -114,7 +147,9 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 							build.setResult(Result.FAILURE);
 						}
 					}
-				});
+				},logEvent);
+				
+				logger.info("Campaign execution is finished. You can view the report here : " +  urlCerberusReport);
 			} else {
 				logger.error("Fail to add campaign " + campaignName + " in cerberus queue");
 				logger.error("UNSTABLE");
@@ -125,6 +160,56 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 			logger.error("UNSTABLE");
 			build.setResult(Result.UNSTABLE);
 		} 
+	}
+	
+	
+	public String getCampaignName() {
+		return campaignName;
+	}
+
+	
+	public String getPlatform() {
+		return platform;
+	}
+
+	public String getEnvironment() {
+		return environment;
+	}
+
+	public String getBrowser() {
+		return browser;
+	}
+
+	public String getBrowserVersion() {
+		return browserVersion;
+	}
+
+	public int getScreenshot() {
+		return screenshot;
+	}
+
+	public int getVerbose() {
+		return verbose;
+	}
+
+	public int getPageSource() {
+		return pageSource;
+	}
+
+	public int getSeleniumLog() {
+		return seleniumLog;
+	}
+
+	public int getTimeOut() {
+		return timeOut;
+	}
+
+	public int getRetries() {
+		return retries;
+	}
+
+	public String getTag() {
+		return tag;
 	}
 
 	// Overridden for better type safety.

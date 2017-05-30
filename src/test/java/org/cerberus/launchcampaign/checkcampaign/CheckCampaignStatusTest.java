@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 import org.cerberus.launchcampaign.*;
-import org.cerberus.launchcampaign.checkcampaign.*;
+import org.cerberus.launchcampaign.event.LogEvent;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockserver.client.server.MockServerClient;
@@ -44,16 +44,23 @@ public class CheckCampaignStatusTest {
 	public MockServerRule mockServerRule = new MockServerRule(this);
 	private MockServerClient mockServerClient;
 	
-	CheckCampaignStatus checkCampaignStatus;
+	private CheckCampaignStatus checkCampaignStatus;
+	private LogEvent logEvent;
 
 //    @Rule
-    public ResourceFile checkCampaignFinishJson = new ResourceFile("/org/cerberus/launchcampaign/checkCampaign/checkCampaignFinish.json");
-    public ResourceFile checkCampaignInProgressJson = new ResourceFile("/org/cerberus/launchcampaign/checkCampaign/checkCampaignInProgress.json");
+    private ResourceFile checkCampaignFinishJson = new ResourceFile("/org/cerberus/launchcampaign/checkCampaign/checkCampaignFinish.json");
+    private ResourceFile checkCampaignInProgressJson = new ResourceFile("/org/cerberus/launchcampaign/checkCampaign/checkCampaignInProgress.json");
     
 	@Before
 	public void before() {
 		urlCheckCampaign = "/Cerberus" ;
 		checkCampaignStatus = new CheckCampaignStatus("tag123", "http://localhost:" + mockServerRule.getPort() + urlCheckCampaign);
+		
+		logEvent = new LogEvent() {			
+			@Override
+			public void log(String error, String warning) {
+			}
+		};
 	}
 	
 	@Test
@@ -82,7 +89,8 @@ public class CheckCampaignStatusTest {
 				public void result(ResultCIDto result) {
 					cptFinish.add(result);
 				}
-			}
+			},
+		logEvent
 		);
 		
 		assertThat("Campaign must be notify as finished", cptFinish.size(), is(1)); // test if campaign Is notify as Finished
@@ -124,7 +132,8 @@ public class CheckCampaignStatusTest {
 				public void result(ResultCIDto result) {
 					cptFinish.add(0);
 				}
-			}
+			},
+		logEvent
 		);
 		
 		assertThat("Campaign must be waiting, and call 1st parameter of method execute", cptWaiting.size(), is(1));
@@ -156,7 +165,8 @@ public class CheckCampaignStatusTest {
 					public void result(ResultCIDto result) {
 						// nothing to do
 					}
-				}
+				},
+			logEvent
 			);
 
 		} catch(FileNotFoundException e) {

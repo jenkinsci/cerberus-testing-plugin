@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.*;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.lang.StringUtils;
+import org.cerberus.launchcampaign.event.LogEvent;
 
 public class ExecuteCampaign {
 
@@ -42,8 +44,17 @@ public class ExecuteCampaign {
 	 * @throws URISyntaxException
 	 * @throws IOException
 	 */
-	public boolean execute() throws URISyntaxException, IOException {
+	public boolean execute(LogEvent logEvent) throws URISyntaxException, IOException {
 
+		String warning = executeCampaignDto.verifyParameterWarning();
+		String error = executeCampaignDto.verifyParameterError();
+		
+		logEvent.log(error, warning);
+		
+		if(!StringUtils.isEmpty(error)) {
+			throw new IllegalArgumentException(error);
+		}
+		
 		URL urlExecuteCampaign = executeCampaignDto.buildUrl(urlCerberus);
 		HttpURLConnection  conn = (HttpURLConnection) urlExecuteCampaign.openConnection();
 		conn.setRequestMethod("GET");

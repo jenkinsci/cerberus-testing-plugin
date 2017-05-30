@@ -25,7 +25,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import org.cerberus.launchcampaign.Constantes;
-import org.cerberus.launchcampaign.executecampaign.*;
+import org.cerberus.launchcampaign.event.LogEvent;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockserver.client.server.MockServerClient;
@@ -40,23 +40,32 @@ public class ExecuteCampaignTest {
 	@Rule
 	public MockServerRule mockServerRule = new MockServerRule(this);
 	private MockServerClient mockServerClient;
+	private LogEvent logEvent;
 	
-	ExecuteCampaign executeCampaign;
+	private ExecuteCampaign executeCampaign;
 
 	@Before
 	public void before() {
-		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "");
+		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "");
 		
 		urlAddCampaign = "http://localhost:" + mockServerRule.getPort() + "/Cerberus/"+Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE;
 		executeCampaign = new ExecuteCampaign(urlAddCampaign, executeCampaignDto);
+		
+		logEvent = new LogEvent() {			
+			@Override
+			public void log(String error, String warning) {
+			}
+		};
 	}
+	
+	
 	
 	@Test
 	public void executeSucess() throws Exception {
 		mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(200));
 		
 		// execute
-		boolean success = executeCampaign.execute();
+		boolean success = executeCampaign.execute(logEvent);
 
 		// assert
 		assertThat(success, is(true));
@@ -67,7 +76,7 @@ public class ExecuteCampaignTest {
 		mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(404));
 		
 		// execute
-		boolean success = executeCampaign.execute();
+		boolean success = executeCampaign.execute(logEvent);
 
 		// assert
 		assertThat(success, is(false));

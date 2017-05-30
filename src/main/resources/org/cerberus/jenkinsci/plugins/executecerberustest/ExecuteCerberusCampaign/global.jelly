@@ -29,11 +29,11 @@
 		</f:entry>
 		<f:entry title="Time to refresh the campaign status (seconds)" field="timeToRefreshCheckCampaignStatus"
 			description="Time to refresh the campaign status (5s by default)">
-			<f:textbox />
+			<f:textbox default="5" />
 		</f:entry>
-		<f:entry title="Timeout for campaign execution (hours)" field="timeOutForCampaignExecution"
+		<f:entry title="Timeout for campaign execution (seconds)" field="timeOutForCampaignExecution"
 			description="Timeout for campaign execution. After this time if campaign is not finished, job failed.">
-			<f:textbox />
+			<f:textbox default="14400"/>
 		</f:entry>
 
 	</f:section>

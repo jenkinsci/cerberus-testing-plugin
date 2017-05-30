@@ -20,8 +20,10 @@
 package org.cerberus.launchcampaign.executecampaign;
 
 import java.net.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.cerberus.launchcampaign.Constantes;
 
@@ -36,8 +38,16 @@ public class ExecuteCampaignDto {
 	private String selectedCampaign;
 	private String tagCerberusCampaign;
 	
-	public ExecuteCampaignDto(String robot, String ss_ip, String environment, String browser, String browserVersion,
-			String platform, String selectedCampaign) {
+	private final int screenshot; 
+	private final int verbose;        
+	private final int pageSource; 
+	private final int seleniumLog; 
+	private final int timeOut; 
+	private final int retries; 
+	
+	public ExecuteCampaignDto(final String robot, final String ss_ip, final String environment, final String browser, final String browserVersion,
+			final String platform, final String selectedCampaign, final int screenshot, final int verbose, 
+			final int pageSource, final int seleniumLog, final int timeOut, final int retries, String tag) {
 		super();
 		this.robot = robot;
 		this.ss_ip = ss_ip;
@@ -47,25 +57,71 @@ public class ExecuteCampaignDto {
 		this.platform = platform;
 		this.selectedCampaign = selectedCampaign;
 		
-		Random random = new Random(new Date().getTime());
-		tagCerberusCampaign = "Jenkins-"+random.nextLong();
+		this.screenshot = screenshot; 
+		this.verbose = verbose;
+		this.pageSource = pageSource; 
+		this.seleniumLog = seleniumLog;
+		this.timeOut = timeOut;
+		this.retries = retries;
+		
+		Date time = new Date();
+		
+		SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddHHmmssSSS"); 	
+		
+		this.tagCerberusCampaign = tag.replace("$[current_timestamp]", dt.format(time));
 	}
-
+	
+	public String verifyParameterWarning() {
+		String warning = "";
+		
+		warning += checkIsEmpty(this.robot, "robot");
+		warning += checkIsEmpty(this.ss_ip, "ss_ip");
+		warning += checkIsEmpty(this.browser, "browser");
+		warning += checkIsEmpty(this.browserVersion, "browserVersion");
+		warning += checkIsEmpty(this.platform, "platform");
+		warning += checkIsEmpty(this.selectedCampaign, "selectedCampaign");
+		
+		return warning;
+		
+		
+	}
+	
+	public String verifyParameterError() {
+		String error = "";
+		
+		error += check0or1(this.screenshot, "screenshot");
+		error += check0or1(this.verbose, "verbose");
+		error += check0or1(this.pageSource, "pageSource");
+		error += check0or1(this.seleniumLog, "seleniumLog");
+		error += check0or1(this.retries, "retries");	
+		
+		return error;
+	}
+	
+	private String checkIsEmpty(String parameter, String parameterName) {
+		if(StringUtils.isEmpty(parameter)) {
+			return parameterName + " is empty, ";
+		}
+		return "";
+	}
+	private String check0or1(int parameter, String parameterName) {
+		if(parameter != 0 && parameter != 1) {
+			return parameterName + " must be 0 or 1 but is " + parameter + ", ";
+		}
+		return "";
+	}
+	
 	public URL buildUrl(String urlCerberus) throws MalformedURLException, URISyntaxException {
-		
-		
-		
 		URIBuilder b = new URIBuilder(urlCerberus + "/" + Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE);
 		
 		b.addParameter("OutputFormat", "json");
-		b.addParameter("Screenshot", "1");
-		b.addParameter("Verbose", "1");
-		b.addParameter("timeout", "5000");
+		b.addParameter("Screenshot",this.screenshot +"");
+		b.addParameter("Verbose", this.verbose+"");
+		b.addParameter("timeout", this.timeOut+"");
 		b.addParameter("Synchroneous", "Y");
-		b.addParameter("PageSource", "Y");
-		b.addParameter("Synchroneous", "1");
-		b.addParameter("SeleniumLog", "1");
-		b.addParameter("retries", "0");
+		b.addParameter("PageSource",this.pageSource + "");
+		b.addParameter("SeleniumLog", this.seleniumLog +"");
+		b.addParameter("retries", this.retries+"");
 		b.addParameter("manualExecution", "N");
 
 		b.addParameter("ss_ip", ss_ip);

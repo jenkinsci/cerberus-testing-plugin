@@ -21,4 +21,33 @@
 	<f:entry title="Browser Version" field="browserVersion" description="Browser than Cerberus will use to execute test. If empty, use the global attribute.">
 		<f:textbox />
 	</f:entry>
+	
+	<f:entry title="Screenshot" field="screenshot" description="Enable screenshot on Cerberus (0 or 1)">
+		<f:textbox default="1"/>
+	</f:entry>
+	
+	<f:entry title="Verbose" field="verbose" description="Verbose mode on Cerberus (0 or 1)" >
+		<f:textbox default="1"/>
+	</f:entry>
+	
+	<f:entry title="Page source" field="pageSource" description="Page source (0 or 1)" >
+		<f:textbox default="1"/>
+	</f:entry>
+	
+	<f:entry title="Selenium Log" field="seleniumLog" description="Active selenium log on Cerberus (0 or 1)" >
+		<f:textbox default="1"/>
+	</f:entry>
+	
+	<f:entry title="Time out" field="timeOut" description="Time out for waiting an element on selenium (ms)" >
+		<f:textbox default="5000"/>
+	</f:entry>
+	
+	<f:entry title="Retries" field="retries" description="Enable Cerberus to retry a test many times (0 or 1)" >
+		<f:textbox default="0"/>
+	</f:entry>
+	
+	<f:entry title="Cerberus Tag" field="tag" description="Tag for this campaign" >
+		<f:textbox default="Jenkins-$[current_timestamp]"/>
+	</f:entry>
+	
 </j:jelly>

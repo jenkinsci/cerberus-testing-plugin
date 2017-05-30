@@ -19,11 +19,13 @@
  */
 package org.cerberus.launchcampaign.checkcampaign;
 
-import java.net.URL;
+import java.net.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.cerberus.launchcampaign.Constantes;
+import org.cerberus.launchcampaign.event.LogEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -61,7 +63,7 @@ public class CheckCampaignStatus {
 	 * @param tagCerberus the tag use when campaign was added to cerberus queue
 	 * @param urlCerberus url of cerberus (ex : http://cerberus/Cerberus)
 	 * @param timeToRefreshCampaignStatus Time to refresh the campaign status (seconds). 5s by default
-	 * @param timeoutForCampaignExecution Timeout for campaign execution (hours). After this time, if campaign is not finished, job failed
+	 * @param timeoutForCampaignExecution Timeout for campaign execution (seconds). After this time, if campaign is not finished, job failed
 	 */
 	public CheckCampaignStatus(final String tagCerberus, final String urlCerberus, final long timeToRefreshCampaignStatus, final int timeoutForCampaignExecution) {
 		this.tagCerberus=tagCerberus;
@@ -78,8 +80,8 @@ public class CheckCampaignStatus {
 	 * 				{@link ResultCIDto} contains all information of execution at finish time
 	 * @throws Exception 
 	 */
-	public void execute(final CheckCampaignEvent checkCampaign, final ResultEvent result) throws Exception {
-		final ScheduledThreadPoolExecutor sch = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(5);
+	public void execute(final CheckCampaignEvent checkCampaign, final ResultEvent result, final LogEvent logEvent) throws Exception {
+		final ScheduledThreadPoolExecutor sch = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
 
 		final AtomicReference<Exception> exceptionOnThread = new AtomicReference<Exception>();
 		
@@ -100,7 +102,10 @@ public class CheckCampaignStatus {
 					if(!checkCampaign.checkCampaign(resultDto)) {
 						sch.shutdown();
 					}
-				} catch (Exception e ) {
+				} catch (SocketException e ) {
+					// do nothing during network problem. Wait the timeout to shutdown, and notify the error to logEvent
+					logEvent.log("", e.getMessage() + "\n" +  ExceptionUtils.getStackTrace(e));
+				}catch (Exception e ) {
 					exceptionOnThread.set(e);
 					sch.shutdown();
 				}
@@ -108,7 +113,7 @@ public class CheckCampaignStatus {
 		}
 		, 0, this.timeToRefreshCampaignStatus, TimeUnit.SECONDS);
 
-		sch.awaitTermination(this.timeoutForCampaignExecution, TimeUnit.HOURS);
+		sch.awaitTermination(this.timeoutForCampaignExecution, TimeUnit.SECONDS);
 		
 		// pass exeption of thread to called method
 		if (exceptionOnThread.get() != null) {
