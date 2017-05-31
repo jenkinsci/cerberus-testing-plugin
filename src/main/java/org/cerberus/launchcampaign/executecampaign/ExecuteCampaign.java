@@ -65,6 +65,9 @@ public class ExecuteCampaign {
 		if(HttpStatus.SC_OK == code) 
 			return true;
 		
+		// log error message
+		logEvent.log("Error message when trying to add a new exectution in queue : " + conn.getResponseMessage(),"");		
+		
 		return false;
 	}
 }
