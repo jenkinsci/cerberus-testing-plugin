@@ -47,7 +47,7 @@
 	</f:entry>
 	
 	<f:entry title="Cerberus Tag" field="tag" description="Tag for this campaign" >
-		<f:textbox default="Jenkins-$[current_timestamp]"/>
+		<f:textbox default="${JOB_NAME}-$[current_timestamp]"/>
 	</f:entry>
 	
 </j:jelly>

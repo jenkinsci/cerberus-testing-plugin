@@ -91,11 +91,17 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		final String browser =   StringUtils.isEmpty(this.browser) ? getDescriptor().getBrowser() : this.browser; 
 		final String browserVersion = StringUtils.isEmpty(this.browserVersion) ? getDescriptor().getBrowserVersion() : this.browserVersion;
 
+
+		
 		try {
+			// calucation of tag
+	        EnvVars env = build.getEnvironment(listener); 
+	        final String expandedTag = env.expand(this.tag); 
+			
 			// 1 - Launch cerberus campaign    		
 			final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(getDescriptor().getRobot(), getDescriptor().getSsIp(), 
 					environment, browser, browserVersion, platform, campaignName, screenshot, verbose, pageSource, 
-					seleniumLog, timeOut, retries, tag);
+					seleniumLog, timeOut, retries, expandedTag);
 		
 			logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + getDescriptor().getUrlCerberus() + " with tag " + executeCampaignDto.getTagCerberus());
 
