@@ -58,8 +58,8 @@
 		* Display a report on console. Fail if a test is KO, else SUCCESS.
 	</description>
 	
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Execute+Cerberus+Test+Plugin</url>
-
+  <url>https://wiki.jenkins.io/display/JENKINS/Cerberus+Jenkins+Plugin</url>
+       
   <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
 
   <licenses>
@@ -71,7 +71,7 @@
 
   <developers>
     <developer>
-      <id>ndeblock</id>
+      <id>nicodeur</id>
       <name>Nicolas Deblock</name>
       <email>nico.deblock@gmail.com</email>
     </developer>
