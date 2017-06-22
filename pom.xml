@@ -69,6 +69,12 @@
     </license>
   </licenses>
 
+	<scm>
+	  <connection>scm:git:ssh://github.com/jenkinsci/cerberus-testing-plugin.git</connection>
+	  <developerConnection>scm:git:ssh://git@github.com/jenkinsci/cerberus-testing-plugin.git</developerConnection>
+	  <url>https://github.com/jenkinsci/cerberus-testing-plugin</url>
+	</scm>
+
   <developers>
     <developer>
       <id>nicodeur</id>
