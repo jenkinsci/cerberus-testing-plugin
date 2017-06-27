@@ -48,6 +48,7 @@
          ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
          ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin.
     -->
+    <connectionUrl>scm:git:ssh://github.com/jenkinsci/cerberus-testing-plugin.git</connectionUrl>
   </properties>
 
   <name>Cerberus Testing Plugin</name>
