@@ -17,22 +17,21 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Cerberus.  If not, see <http://www.gnu.org/licenses/>.
+    along with Cerberus.  If not, see <http://www.gnu.org/licenses />.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>2.11</version>
-    <relativePath/>
+    <version>2.5</version>
+    <relativePath />
   </parent>
   <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>cerberus-testing</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.2-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <properties>
@@ -48,6 +47,7 @@
          ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
          ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin.
     -->
+    <connectionUrl>scm:git:https://github.com/jenkinsci/cerberus-testing-plugin.git</connectionUrl>
   </properties>
 
   <name>Cerberus Testing Plugin</name>
@@ -70,10 +70,11 @@
   </licenses>
 
 	<scm>
-	  <connection>scm:git:ssh://github.com/jenkinsci/cerberus-testing-plugin.git</connection>
-	  <developerConnection>scm:git:ssh://git@github.com/jenkinsci/cerberus-testing-plugin.git</developerConnection>
+	  <connection>scm:git:https://github.com/jenkinsci/cerberus-testing-plugin.git</connection>
+	  <developerConnection>scm:git:https://git@github.com/jenkinsci/cerberus-testing-plugin.git</developerConnection>
 	  <url>https://github.com/jenkinsci/cerberus-testing-plugin</url>
-	</scm>
+	  <tag>HEAD</tag>
+  </scm>
 
   <developers>
     <developer>
