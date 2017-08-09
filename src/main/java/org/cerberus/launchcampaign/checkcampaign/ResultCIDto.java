@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.*;
  * @author ndeblock
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResultCIDto {
 
 	@JsonProperty("message")
@@ -85,7 +86,9 @@ public class ResultCIDto {
 	private long statusKO;
 	@JsonProperty("status_NE_nbOfExecution")
 	private long statusNE;
-
+    @JsonProperty("status_QU_nbOfExecution")
+    private long statusQU;
+    
 	@JsonProperty("TOTAL_nbOfExecution")
 	private long total;
 
@@ -265,10 +268,19 @@ public class ResultCIDto {
 		this.total = total;
 	}
 	
+	public long getStatusQU() {
+	    return statusQU;
+	}
+
+	public void setStatusQU(long statusQU) {
+	    this.statusQU = statusQU;
+	}
 	
 	// *******************   some calculated field  *****************************
 	
-	/**
+
+
+    /**
 	 * @return The total of executed test (OK + CA + FA + NA + KO)
 	 */
 	public long getTotalTestExecuted() {
@@ -299,7 +311,8 @@ public class ResultCIDto {
 				" | FA " + this.getStatusFA() +
 				" | NA " + this.getStatusNA() +
 				" | KO " + this.getStatusKO() +
-				" | PE " + this.getStatusPE() + 
+				" | PE " + this.getStatusPE() +
+				" | QU " + this.getStatusQU() +
 				" | NE " + this.getStatusNE();
 	}
 	

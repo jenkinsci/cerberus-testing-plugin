@@ -54,7 +54,11 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	private final String environment;
 	private final String browser;
 	private final String browserVersion;
- 
+	private final String ssIp;
+	private final String ss_p;
+	private final String screensize;
+	private final String robot;
+	    
 	private final int screenshot; // default is 1
 	private final int verbose; // default is 1       
 	private final int pageSource; // default is Y
@@ -67,7 +71,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	@DataBoundConstructor
 	public ExecuteCerberusCampaign(final String campaignName, final String platform, final String environment, final String browser, 
 			final String browserVersion, final int screenshot, final int verbose, final int pageSource, final int seleniumLog, 
-			final int timeOut, final int retries, String tag) {
+			final int timeOut, final int retries, String tag, final String ss_p, final String screensize, final String ssIp, final String robot) {
 		this.campaignName = campaignName;
 		this.platform=platform;
 		this.environment=environment;
@@ -81,6 +85,11 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		this.timeOut = timeOut; // default is 5000
 		this.retries = retries; // default is 0
 		this.tag = tag; 
+		
+		this.ss_p =ss_p;
+		this.ssIp =ssIp;		
+		this.robot =robot;
+		this.screensize =screensize;
 	}
 
 	@Override
@@ -88,9 +97,13 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		final JenkinsLogger logger = new JenkinsLogger(listener.getLogger());
 
 		// overide attribute if local settings is empty
+	    final String robot =   StringUtils.isEmpty(this.robot) ? getDescriptor().getRobot() : this.robot; 
+	      
+		final String ssIp =   StringUtils.isEmpty(this.ssIp) ? getDescriptor().getSsIp() : this.ssIp; 
+		final String ss_p =   StringUtils.isEmpty(this.ss_p) ? getDescriptor().getSs_p() : this.ss_p;
+		final String platform =   StringUtils.isEmpty(this.platform) ? getDescriptor().getPlatform() : this.platform; 		
 		final String browser =   StringUtils.isEmpty(this.browser) ? getDescriptor().getBrowser() : this.browser; 
 		final String browserVersion = StringUtils.isEmpty(this.browserVersion) ? getDescriptor().getBrowserVersion() : this.browserVersion;
-
 
 		
 		try {
@@ -99,9 +112,9 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	        final String expandedTag = env.expand(this.tag); 
 			
 			// 1 - Launch cerberus campaign    		
-			final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(getDescriptor().getRobot(), getDescriptor().getSsIp(), 
+			final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(robot, ssIp, 
 					environment, browser, browserVersion, platform, campaignName, screenshot, verbose, pageSource, 
-					seleniumLog, timeOut, retries, expandedTag);
+					seleniumLog, timeOut, retries, expandedTag, ss_p, screensize);
 		
 			logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + getDescriptor().getUrlCerberus() + " with tag " + executeCampaignDto.getTagCerberus());
 
@@ -150,7 +163,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 						// fail if test is not OK
 						if(!"OK".equals(resultDto.getResult())) {
 							logger.error("FAIL");
-							build.setResult(Result.FAILURE);
+							build.setResult(Result.UNSTABLE);
 						}
 					}
 				},logEvent);
@@ -158,13 +171,15 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 				logger.info("Campaign execution is finished. You can view the report here : " +  urlCerberusReport);
 			} else {
 				logger.error("Fail to add campaign " + campaignName + " in cerberus queue");
+				logger.error("Think to check cerberus log or cerberus queue to resolve problem");
 				logger.error("UNSTABLE");
-				build.setResult(Result.UNSTABLE);
+				build.setResult(Result.FAILURE);
 			}
 		} catch (Exception e) {
 			logger.error("error for campaign  " + campaignName + " : " , e);
+			logger.error("Think to check cerberus log or cerberus queue to resolve problem");
 			logger.error("UNSTABLE");
-			build.setResult(Result.UNSTABLE);
+			build.setResult(Result.FAILURE);
 		} 
 	}
 	
@@ -218,7 +233,23 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		return tag;
 	}
 
-	// Overridden for better type safety.
+	public String getSs_p() {
+        return ss_p;
+    }
+
+    public String getScreensize() {
+        return screensize;
+    }
+
+    public String getSsIp() {
+        return ssIp;
+    }
+
+    public String getRobot() {
+        return robot;
+    }
+
+    // Overridden for better type safety.
 	// If your plugin doesn't really define any property on Descriptor,
 	// you don't have to do this.
 	@Override
@@ -247,6 +278,8 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		private String urlCerberus;
 		private String robot;
 		private String ssIp;
+		private String ss_p;
+		private String platform;
 		private String browser;
 		private String browserVersion;
 		private long timeToRefreshCheckCampaignStatus;
@@ -289,11 +322,13 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 			// set that to properties and call save().
 			urlCerberus = formData.getString("urlCerberus");
 			robot = formData.getString("robot");
-			ssIp = formData.getString("ssIp");        
+			ssIp = formData.getString("ssIp");
+			ss_p = formData.getString("ss_p");  
 			browser = formData.getString("browser");
 			browserVersion = formData.getString("browserVersion");
 			timeToRefreshCheckCampaignStatus = formData.getLong("timeToRefreshCheckCampaignStatus");
 			timeOutForCampaignExecution = formData.getInt("timeOutForCampaignExecution");
+			platform = formData.getString("platform");
 			// Can also use req.bindJSON(this, formData);
 			//  (easier when there are many fields; need set* methods for this)
 			save();
@@ -354,6 +389,22 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		public void setTimeOutForCampaignExecution(int timeOutForCampaignExecution) {
 			this.timeOutForCampaignExecution = timeOutForCampaignExecution;
 		}
+
+        public String getSs_p() {
+            return ss_p;
+        }
+
+        public void setSs_p(String ss_p) {
+            this.ss_p = ss_p;
+        }
+
+        public String getPlatform() {
+            return platform;
+        }
+
+        public void setPlatform(String platform) {
+            this.platform = platform;
+        }
 
 	}
 
