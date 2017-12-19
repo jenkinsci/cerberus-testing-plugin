@@ -129,7 +129,7 @@ public class ExecuteCampaignDto {
 		return "";
 	}
 	private String check0or1or2(int parameter, String parameterName) {
-	    if(parameter != 0 && parameter != 1) {
+	    if(parameter != 0 && parameter != 1 && parameter != 2) {
 	        return parameterName + " must be 0, 1 or 2 but is " + parameter + ", ";
 	    }
 	    return "";

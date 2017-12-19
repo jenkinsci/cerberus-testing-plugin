@@ -163,7 +163,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 						// fail if test is not OK
 						if(!"OK".equals(resultDto.getResult())) {
 							logger.error("FAIL");
-							build.setResult(Result.UNSTABLE);
+							build.setResult(Result.FAILURE);
 						}
 					}
 				},logEvent);
