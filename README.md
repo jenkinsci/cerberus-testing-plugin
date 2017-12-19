@@ -113,7 +113,68 @@ checkCampaignStatus.execute(resultDto -> {
 
 `ExecuteCampaign` and `CheckCampaignStatus` are independent and could be used by other process than Jenkins.
 
+## Release Cerberus Jenkins Plugin
 
+Modify you maven settings.xml
+```
+<settings>
+...................
+
+
+<!-- added this -->
+  <pluginGroups>
+    <pluginGroup>org.jenkins-ci.tools</pluginGroup>
+  </pluginGroups>
+
+  <servers>
+    <server>
+      <id>maven.jenkins-ci.org</id> 
+      <username>jenkinsusername</username>
+      <password>jenkinspassword</password>
+    </server>
+  </servers>
+
+  
+  <profiles>
+    <profile>
+      <id>jenkins</id>
+      <activation>
+        <activeByDefault>true</activeByDefault> 
+      </activation>
+      <repositories>
+        <repository>
+          <id>repo.jenkins-ci.org</id>
+          <url>https://repo.jenkins-ci.org/public/</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>repo.jenkins-ci.org</id>
+          <url>https://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <mirrors>
+    <mirror>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+      <mirrorOf>m.g.o-public</mirrorOf>
+    </mirror>
+  </mirrors>
+ <!-- end added this --> 
+ 
+ ..............................
+ 
+</settings>
+```
+
+Pull cerberus jenkins plugin and launch this cmd on project :
+```
+mvn release:prepare release:perform
+```
+
+Don't forget to ask a pull request from jenkinsci to cerberustesting github after sucess operation
 
 ## License
 

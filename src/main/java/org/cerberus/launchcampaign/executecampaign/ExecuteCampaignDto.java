@@ -66,7 +66,8 @@ public class ExecuteCampaignDto {
 		this.seleniumLog = seleniumLog;
 		this.timeOut = timeOut;
 		this.retries = retries;
-		
+		this.screensize=screensize;
+		this.ss_p=ss_p;
 		Date time = new Date();
 		
 		SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddHHmmssSSS"); 	
