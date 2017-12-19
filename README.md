@@ -174,7 +174,12 @@ Pull cerberus jenkins plugin and launch this cmd on project :
 mvn release:prepare release:perform
 ```
 
-Don't forget to ask a pull request from jenkinsci to cerberustesting github after sucess operation
+Check if your new version is in https://updates.jenkins-ci.org/update-center.json. This file is updated every 4 hours (plus mirror propagation time), so there's some delay before your new version appears here. So, as a rule of thumbs, please wait at least 8 hours before starting to worry about any issue.
+
+
+==> Don't forget to ask a pull request from jenkinsci to cerberustesting github after sucess operation
+
+
 
 ## License
 
