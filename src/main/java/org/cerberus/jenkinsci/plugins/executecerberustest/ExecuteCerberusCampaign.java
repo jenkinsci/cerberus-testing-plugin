@@ -58,7 +58,9 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	private final String ss_p;
 	private final String screensize;
 	private final String robot;
-	    
+	private final String manualHost;
+	private final String manualEnv;
+
 	private final int screenshot; // default is 1
 	private final int verbose; // default is 1       
 	private final int pageSource; // default is Y
@@ -71,7 +73,8 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	@DataBoundConstructor
 	public ExecuteCerberusCampaign(final String campaignName, final String platform, final String environment, final String browser, 
 			final String browserVersion, final int screenshot, final int verbose, final int pageSource, final int seleniumLog, 
-			final int timeOut, final int retries, String tag, final String ss_p, final String screensize, final String ssIp, final String robot) {
+			final int timeOut, final int retries, String tag, final String ss_p, final String screensize, final String ssIp, final String robot,
+								   final String manualHost, final String manualEnv) {
 		this.campaignName = campaignName;
 		this.platform=platform;
 		this.environment=environment;
@@ -90,6 +93,8 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		this.ssIp =ssIp;		
 		this.robot =robot;
 		this.screensize =screensize;
+		this.manualHost=manualHost;
+		this.manualEnv=manualEnv;
 	}
 
 	@Override
@@ -114,7 +119,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 			// 1 - Launch cerberus campaign    		
 			final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(robot, ssIp, 
 					environment, browser, browserVersion, platform, campaignName, screenshot, verbose, pageSource, 
-					seleniumLog, timeOut, retries, expandedTag, ss_p, screensize);
+					seleniumLog, timeOut, retries, expandedTag, ss_p, screensize, manualHost, manualEnv);
 		
 			logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + getDescriptor().getUrlCerberus() + " with tag " + executeCampaignDto.getTagCerberus());
 
@@ -153,6 +158,13 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 					
 					@Override
 					public void result(final ResultCIDto resultDto) {
+						if(resultDto == null) {
+							logger.info("---------------------------------------------------------------------------------------------");
+							logger.info("An error occurred, see log above");
+							logger.info("---------------------------------------------------------------------------------------------");
+							build.setResult(Result.FAILURE);
+							return;
+						}
 						// display result and shutdown
 						long timeToExecuteTest = resultDto.getExecutionEnd().getTime() - resultDto.getExecutionStart().getTime();
 						logger.info("---------------------------------------------------------------------------------------------");

@@ -64,9 +64,17 @@ public class ExecuteCampaign {
 		int code = conn.getResponseCode();
 		if(HttpStatus.SC_OK == code) 
 			return true;
-		
+
+		String contains="";
+
+		try {
+			contains = conn.getInputStream().toString();
+		} catch (Exception e) {
+			// do nothing
+		}
+
 		// log error message
-		logEvent.log("Error message when trying to add a new exectution in queue : " + conn.getResponseMessage(),"");		
+		logEvent.log("Error message when trying to add a new exectution in queue : " + conn.getResponseMessage(), contains);
 		
 		return false;
 	}

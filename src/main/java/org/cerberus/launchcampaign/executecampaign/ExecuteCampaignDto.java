@@ -39,7 +39,9 @@ public class ExecuteCampaignDto {
 	private String tagCerberusCampaign;
 	private String ss_p;
     private String screensize;
-    
+	private String manualHost;
+	private String manualEnv;
+
 	private final int screenshot; 
 	private final int verbose;        
 	private final int pageSource; 
@@ -50,7 +52,7 @@ public class ExecuteCampaignDto {
 	
 	public ExecuteCampaignDto(final String robot, final String ss_ip, final String environment, final String browser, final String browserVersion,
 			final String platform, final String selectedCampaign, final int screenshot, final int verbose, 
-			final int pageSource, final int seleniumLog, final int timeOut, final int retries, String tag, String ss_p, String screensize) {
+			final int pageSource, final int seleniumLog, final int timeOut, final int retries, String tag, String ss_p, String screensize, String manualHost, String manualEnv) {
 		super();
 		this.robot = robot;
 		this.ss_ip = ss_ip;
@@ -68,6 +70,9 @@ public class ExecuteCampaignDto {
 		this.retries = retries;
 		this.screensize=screensize;
 		this.ss_p=ss_p;
+		this.manualHost=manualHost;
+		this.manualEnv=manualEnv;
+
 		Date time = new Date();
 		
 		SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddHHmmssSSS"); 	
@@ -136,31 +141,42 @@ public class ExecuteCampaignDto {
 	}
 
 	public URL buildUrl(String urlCerberus) throws MalformedURLException, URISyntaxException {
-	    URIBuilder b = new URIBuilder(urlCerberus + "/" + Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE);
+		URIBuilder b = new URIBuilder(urlCerberus + "/" + Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE);
 
-	    b.addParameter("screenshot",this.screenshot +"");
-	    b.addParameter("verbose", this.verbose+"");
-	    b.addParameter("timeout", this.timeOut+"");
-	    b.addParameter("pagesource",this.pageSource + "");
-	    b.addParameter("seleniumlog", this.seleniumLog +"");
-	    b.addParameter("retries", this.retries+"");
-	    b.addParameter("manualexecution", "N");
+		addIfNotEmpty(b, "screenshot", this.screenshot + "");
+		addIfNotEmpty(b, "verbose", this.verbose + "");
+		addIfNotEmpty(b, "timeout", this.timeOut + "");
+		addIfNotEmpty(b, "pagesource", this.pageSource + "");
+		addIfNotEmpty(b, "seleniumlog", this.seleniumLog + "");
+		addIfNotEmpty(b, "retries", this.retries + "");
+		addIfNotEmpty(b, "manualexecution", "N");
 
-	    b.addParameter("ss_ip", ss_ip);
-	    b.addParameter("ss_p", ss_p);
-	    b.addParameter("robot", robot);
-	    b.addParameter("environment", environment);
-	    b.addParameter("browser", browser);
-	    b.addParameter("version", browserVersion);
-	    b.addParameter("platform", platform);
-	    b.addParameter("campaign", selectedCampaign);
-	    b.addParameter("screensize", screensize);
+		addIfNotEmpty(b, "ss_ip", ss_ip);
+		addIfNotEmpty(b, "ss_p", ss_p);
+		addIfNotEmpty(b, "robot", robot);
+		addIfNotEmpty(b, "environment", environment);
+		addIfNotEmpty(b, "browser", browser);
+		addIfNotEmpty(b, "version", browserVersion);
+		addIfNotEmpty(b, "platform", platform);
+		addIfNotEmpty(b, "campaign", selectedCampaign);
+		addIfNotEmpty(b, "screensize", screensize);
+
+		if (!StringUtils.isEmpty(manualHost)) {
+			addIfNotEmpty(b, "manualurl","1");
+			addIfNotEmpty(b, "myhost", manualHost);
+			addIfNotEmpty(b, "myenvdata", manualEnv);
+		}
 
 	    // genere a random tag
-	    b.addParameter("tag", tagCerberusCampaign);
+		addIfNotEmpty(b,"tag", tagCerberusCampaign);
 
 
 	    return new URL(b.build().toString());
+	}
+
+	public void addIfNotEmpty(URIBuilder b, String key, String value) {
+	    if(!StringUtils.isEmpty(value))
+		    b.addParameter(key,value);
 	}
 
 	public String getTagCerberus() {

@@ -113,8 +113,11 @@ public class CheckCampaignStatus {
 		}
 		, 0, this.timeToRefreshCampaignStatus, TimeUnit.SECONDS);
 
-		sch.awaitTermination(this.timeoutForCampaignExecution, TimeUnit.SECONDS);
-		
+		if(!sch.awaitTermination(this.timeoutForCampaignExecution, TimeUnit.SECONDS)) {
+			logEvent.log("interruped by timeout of "+ this.timeoutForCampaignExecution + "ms (see global settings fo Cerberus Plugin)","");
+			result.result(null);
+		}
+
 		// pass exeption of thread to called method
 		if (exceptionOnThread.get() != null) {
 		   throw exceptionOnThread.get();

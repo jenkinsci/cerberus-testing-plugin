@@ -11,7 +11,7 @@
 	</f:entry>
 	
 	<f:entry title="Cerberus Tag" field="tag" description="Tag for this campaign" >
-		<f:textbox default="${JOB_NAME}-$[current_timestamp]"/>
+		<f:textbox default="$${JOB_NAME}-$$[current_timestamp]"/>
 	</f:entry>
 	
 	<f:entry title="Environment" field="environment" description="Environment Cerberus must use">
@@ -21,8 +21,16 @@
 	<f:entry title="Robot" field="robot" description="Robot (use global settings by default)">
 		<f:textbox />
 	</f:entry>
-	
-	
+
+	<f:advanced >
+		<f:entry title="Manual Host" field="manualHost" description="Override host of the application to test">
+			<f:textbox />
+		</f:entry>
+		<f:entry title="Manual Environment" field="manualEnv" description=" Environment where to get the test data when a Manual host is defined.">
+			<f:textbox />
+		</f:entry>
+	</f:advanced>
+
 	<f:advanced >
 		<f:entry title="Robot server IP" field="ssIp" description="Robot server IP. If empty, use the global attribute.">
 			<f:textbox />
