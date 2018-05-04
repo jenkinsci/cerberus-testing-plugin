@@ -21,7 +21,9 @@ package org.cerberus.launchcampaign.checkcampaign;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represent object was return by cerberus to send status of campaign's execution
@@ -300,7 +302,7 @@ public class ResultCIDto {
 	public int getPercentOfTestExecuted() {
 		if(this.getTestToExecute() == 0) return 0;
 		
-		return (int) ((this.getTotalTestExecuted() / (double) this.getTestToExecute()) * 100d);
+		return (int) ((this.getTotalTestExecuted() / (double) this.getTotal()) * 100d);
 	}
 
 

@@ -24,9 +24,13 @@ import static org.junit.Assert.assertThat;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
+import java.util.ArrayList;
+
 import org.cerberus.launchcampaign.Constantes;
 import org.cerberus.launchcampaign.event.LogEvent;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockserver.client.server.MockServerClient;
 import org.mockserver.junit.MockServerRule;
@@ -46,14 +50,14 @@ public class ExecuteCampaignTest {
 
 	@Before
 	public void before() {
-		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "","","");
+		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, "","", new ArrayList<String>());
 		
 		urlAddCampaign = "http://localhost:" + mockServerRule.getPort() + "/Cerberus/"+Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE;
 		executeCampaign = new ExecuteCampaign(urlAddCampaign, executeCampaignDto);
 		
 		logEvent = new LogEvent() {			
 			@Override
-			public void log(String error, String warning) {
+			public void log(String error, String warning, String info) {
 			}
 		};
 	}

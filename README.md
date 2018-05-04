@@ -28,10 +28,9 @@ Cerberus is an open source, user friendly, **automated testing sofware**. See [w
 ### On Jenkinsfile
 * Just call `executeCerberusCampaigne` function with parameters :
 	* `campaignName` : Campaign name to execute
-	* `platform` :  Platform to execute (define into Cerberus)
+	* `Tag` : Tag to apply
 	* `environment` :  Environment to execute (define into Cerberus)
 	* `browser` : Browser executed by Cerberus to test application. If `browser` is empty, use global settings of Cerberus plugin.
-	* `browserVersion` :  Browser version executed by Cerberus to test application. If `browserVersion` is empty, use global settings of Cerberus plugin.
    
 ```
 pipeline {	
@@ -40,7 +39,7 @@ pipeline {
 		...
 		stage('cerberus Test') {
 			steps {					
-				executeCerberusCampaign campaignName : "Test_campaign" , platform : "", environment : "QA", browser : "firefox", browserVersion : "47"
+				executeCerberusCampaign campaignName : "Test_campaign" , tag : "Test_campaign_YYYYMMDDHHmmss", environment : "QA", browser : "firefox"
 			}
 		}		
 		...
