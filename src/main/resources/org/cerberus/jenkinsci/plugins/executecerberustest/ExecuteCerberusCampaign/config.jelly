@@ -26,7 +26,7 @@
 		<f:entry title="Manual Host" field="manualHost" description="Override host of the application to test">
 			<f:textbox />
 		</f:entry>
-		<f:entry title="Manual Environment" field="manualEnv" description=" Environment where to get the test data when a Manual host is defined.">
+		<f:entry title="Manual ContextRoot" field="manualContextRoot" description="Override context Root.">
 			<f:textbox />
 		</f:entry>
 	</f:advanced>

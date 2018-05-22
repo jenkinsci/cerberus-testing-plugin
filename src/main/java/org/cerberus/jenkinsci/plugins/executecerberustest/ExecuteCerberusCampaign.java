@@ -59,7 +59,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	private final String screensize;
 	private final String robot;
 	private final String manualHost;
-	private final String manualEnv;
+	private final String manualContextRoot;
 
 	private final int screenshot; // default is 1
 	private final int verbose; // default is 1       
@@ -74,7 +74,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	public ExecuteCerberusCampaign(final String campaignName, final String platform, final String environment, final String browser, 
 			final String browserVersion, final int screenshot, final int verbose, final int pageSource, final int seleniumLog, 
 			final int timeOut, final int retries, String tag, final String ss_p, final String screensize, final String ssIp, final String robot,
-								   final String manualHost, final String manualEnv) {
+								   final String manualHost, final String manualContextRoot) {
 		this.campaignName = campaignName;
 		this.platform=platform;
 		this.environment=environment;
@@ -94,7 +94,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 		this.robot =robot;
 		this.screensize =screensize;
 		this.manualHost=manualHost;
-		this.manualEnv=manualEnv;
+		this.manualContextRoot=manualContextRoot;
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 			// 1 - Launch cerberus campaign    		
 			final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(robot, ssIp, 
 					environment, browser, browserVersion, platform, campaignName, screenshot, verbose, pageSource, 
-					seleniumLog, timeOut, retries, expandedTag, ss_p, screensize, manualHost, manualEnv);
+					seleniumLog, timeOut, retries, expandedTag, ss_p, screensize, manualHost, manualContextRoot);
 		
 			logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + getDescriptor().getUrlCerberus() + " with tag " + executeCampaignDto.getTagCerberus());
 

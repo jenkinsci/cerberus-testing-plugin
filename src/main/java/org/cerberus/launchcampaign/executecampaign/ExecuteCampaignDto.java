@@ -40,7 +40,7 @@ public class ExecuteCampaignDto {
 	private String ss_p;
     private String screensize;
 	private String manualHost;
-	private String manualEnv;
+	private String manualContextRoot;
 
 	private final int screenshot; 
 	private final int verbose;        
@@ -52,7 +52,7 @@ public class ExecuteCampaignDto {
 	
 	public ExecuteCampaignDto(final String robot, final String ss_ip, final String environment, final String browser, final String browserVersion,
 			final String platform, final String selectedCampaign, final int screenshot, final int verbose, 
-			final int pageSource, final int seleniumLog, final int timeOut, final int retries, String tag, String ss_p, String screensize, String manualHost, String manualEnv) {
+			final int pageSource, final int seleniumLog, final int timeOut, final int retries, String tag, String ss_p, String screensize, String manualHost, String manualContextRoot) {
 		super();
 		this.robot = robot;
 		this.ss_ip = ss_ip;
@@ -71,7 +71,7 @@ public class ExecuteCampaignDto {
 		this.screensize=screensize;
 		this.ss_p=ss_p;
 		this.manualHost=manualHost;
-		this.manualEnv=manualEnv;
+		this.manualContextRoot=manualContextRoot;
 
 		Date time = new Date();
 		
@@ -145,7 +145,8 @@ public class ExecuteCampaignDto {
 
 		addIfNotEmpty(b, "screenshot", this.screenshot + "");
 		addIfNotEmpty(b, "verbose", this.verbose + "");
-		addIfNotEmpty(b, "timeout", this.timeOut + "");
+		if(this.timeOut != 0)
+			addIfNotEmpty(b, "timeout", this.timeOut + "");
 		addIfNotEmpty(b, "pagesource", this.pageSource + "");
 		addIfNotEmpty(b, "seleniumlog", this.seleniumLog + "");
 		addIfNotEmpty(b, "retries", this.retries + "");
@@ -162,9 +163,9 @@ public class ExecuteCampaignDto {
 		addIfNotEmpty(b, "screensize", screensize);
 
 		if (!StringUtils.isEmpty(manualHost)) {
-			addIfNotEmpty(b, "manualurl","1");
+			addIfNotEmpty(b, "manualurl", "2");
 			addIfNotEmpty(b, "myhost", manualHost);
-			addIfNotEmpty(b, "myenvdata", manualEnv);
+			addIfNotEmpty(b, "mycontextroot", manualContextRoot);
 		}
 
 	    // genere a random tag
