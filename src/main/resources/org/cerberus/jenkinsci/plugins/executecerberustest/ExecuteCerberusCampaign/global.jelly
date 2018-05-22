@@ -13,7 +13,7 @@
 			description="Url of cerberus">
 			<f:textbox />
 		</f:entry>
-		<f:entry title="Default Robot" field="robot" description="Robot">
+		<f:entry title="Default Robot" field="robot" description="Robot, keep empty if you want to use campaigns value">
 			<f:textbox />
 		</f:entry>
 		

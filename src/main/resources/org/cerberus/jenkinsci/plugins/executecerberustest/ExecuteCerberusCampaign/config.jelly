@@ -11,19 +11,30 @@
 	</f:entry>
 	
 	<f:entry title="Cerberus Tag" field="tag" description="Tag for this campaign" >
-		<f:textbox default="${instance.jobName}-$[current_timestamp]"/>
+		<f:textbox default="${JOB_NAME}-$[current_timestamp]"/>
 	</f:entry>
-		
+
+
+	<f:advanced >
+		<f:entry title="Manual Host" field="manualHost" description="Override host of the application to test">
+			<f:textbox />
+		</f:entry>
+		<f:entry title="Manual ContextRoot" field="manualContextRoot" description="Override context Root.">
+			<f:textbox />
+		</f:entry>
+	</f:advanced>
+
 	<f:advanced >
 		<f:entry title="Environment" field="environment" description="Environment Cerberus must use">
 			<f:textbox />
 		</f:entry>
-		
+
 		<f:entry title="Robot" field="robot" description="Robot (use global settings by default)">
 			<f:textbox />
 		</f:entry>
-	
-	
+	</f:advanced>
+
+	<f:advanced >
 		<f:entry title="Robot server IP" field="ssIp" description="Robot server IP. If empty, use the global attribute.">
 			<f:textbox />
 		</f:entry>
@@ -59,15 +70,15 @@
 		<f:entry title="Retries" field="retries" description="Enable Cerberus to retry a test many times (0, 1, 2 or 3 - number of retry in case of not OK)" >
 			<f:textbox default="0"/>
 		</f:entry>
-		
+
 		<f:entry title="Priority" field="priority" description="Define an order of priority in Cerberus to prioritize the campaign execution order (the lowest number, the highest priority)" >
 			<f:textbox default="1000"/>
 		</f:entry>
-		
+
 		<f:entry title="Country" field="country" description="List of countries to execute campaign on (comma separated if several countries, for example : 'FR' or 'FR,UK,BE')" >
 			<f:textbox />
 		</f:entry>
-		
+
 	</f:advanced>
 	
 </j:jelly>

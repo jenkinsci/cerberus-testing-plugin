@@ -63,7 +63,7 @@ public class ExecuteCampaign {
 		conn.connect();
 		int code = conn.getResponseCode();
 		logEvent.log("", "", "HTTP response : " + code);
-		
+
 		if(HttpStatus.SC_OK == code) {
 			logEvent.log("", "", "Cerberus response message : " + conn.getResponseMessage());
 			logEvent.log("", "", "Requesting Cerberus with the following parameters : ");
@@ -72,10 +72,19 @@ public class ExecuteCampaign {
 			}
 			return true;
 		}
-		
+
+
+		String contains="";
+
+		try {
+			contains = conn.getInputStream().toString();
+		} catch (Exception e) {
+			// do nothing
+		}
+
 		// log error message
-		logEvent.log("Error message when trying to add a new execution in queue : " + conn.getResponseMessage(),"", "");		
-		
+		logEvent.log("Error message when trying to add a new exectution in queue : " + conn.getResponseMessage(), contains, "");
+
 		return false;
 	}
 }

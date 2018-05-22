@@ -31,3 +31,7 @@ work/*
 .classpath
 .project
 .settings/**
+
+#IntelliJ
+.idea/**
+*.iml

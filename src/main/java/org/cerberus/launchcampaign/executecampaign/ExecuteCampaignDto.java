@@ -32,26 +32,28 @@ import org.cerberus.launchcampaign.Constantes;
 
 public class ExecuteCampaignDto {
 
-	private final String robot;
-	private final String ss_ip;
-	private final String environment;
-	private final String browser;
-	private final String selectedCampaign;
-	private final String tagCerberusCampaign;
-	private final String ss_p;
-    private final List<String> countries;
-    
+	private String robot;
+	private String ss_ip;
+	private String environment;
+	private String browser;
+	private String selectedCampaign;
+	private String tagCerberusCampaign;
+	private String ss_p;
+	private final List<String> countries;
+	private String manualHost;
+	private String manualContextRoot;
+
 	private final int screenshot; 
 	private final int verbose;        
 	private final int pageSource; 
 	private final int seleniumLog; 
 	private final int timeOut; 
 	private final int retries;
-	private final int priority; 
+	private final int priority;
 	
 	
-	public ExecuteCampaignDto(final String robot, final String ss_ip, final String environment, final String browser, final String selectedCampaign, final int screenshot, final int verbose, 
-			final int pageSource, final int seleniumLog, final int timeOut, final int retries, final int priority, String tag, String ss_p, List<String> countries) {
+	public ExecuteCampaignDto(final String robot, final String ss_ip, final String environment, final String browser, final String selectedCampaign, final int screenshot, final int verbose,
+			final int pageSource, final int seleniumLog, final int timeOut, final int priority, final int retries, String tag, String ss_p, String manualHost, String manualContextRoot, List<String> countries) {
 		super();
 		this.robot = robot;
 		this.ss_ip = ss_ip;
@@ -66,8 +68,11 @@ public class ExecuteCampaignDto {
 		this.retries = retries;
 		this.priority = priority;
 		this.ss_p=ss_p;
+		this.manualHost=manualHost;
+		this.manualContextRoot=manualContextRoot;
+
 		this.countries=countries;
-		
+
 		Date time = new Date();
 		SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddHHmmssSSS"); 	
 		
@@ -114,28 +119,42 @@ public class ExecuteCampaignDto {
 	}
 
 	public URL buildUrl(String urlCerberus) throws MalformedURLException, URISyntaxException {
-	    URIBuilder b = new URIBuilder(urlCerberus + "/" + Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE);
+		URIBuilder b = new URIBuilder(urlCerberus + "/" + Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE);
 
-	    b.addParameter("campaign", selectedCampaign);
-	    b.addParameter("tag", tagCerberusCampaign);
-	    b.addParameter("environment", environment);
-	    b.addParameter("robot", robot);
-	    b.addParameter("ss_ip", ss_ip);
-	    b.addParameter("ss_p", ss_p);
-	    b.addParameter("browser", browser);
-	    b.addParameter("screenshot",this.screenshot+"");
-	    b.addParameter("verbose", this.verbose+"");
-	    b.addParameter("pagesource",this.pageSource+"");
-	    b.addParameter("seleniumlog", this.seleniumLog+"");
-	    b.addParameter("timeout", this.timeOut+"");
-	    b.addParameter("retries", this.retries+"");
-	    b.addParameter("priority", this.priority+"");	    
-	    for (String country : countries) {
-	    	b.addParameter("country", country);
-	    }
-	    b.addParameter("manualexecution", "N");
 
-	    return new URL(b.build().toString());
+		addIfNotEmpty(b, "campaign", this.selectedCampaign);
+		addIfNotEmpty(b,"tag", tagCerberusCampaign);
+		addIfNotEmpty(b, "environment", environment);
+		addIfNotEmpty(b, "robot", robot);
+		addIfNotEmpty(b, "ss_ip", ss_ip);
+		addIfNotEmpty(b, "ss_p", ss_p);
+		addIfNotEmpty(b, "browser", browser);
+		addIfNotEmpty(b,"screenshot",this.screenshot+"");
+		addIfNotEmpty(b, "verbose", this.verbose + "");
+		addIfNotEmpty(b, "pagesource", this.pageSource + "");
+		addIfNotEmpty(b, "seleniumlog", this.seleniumLog + "");
+
+		if(this.timeOut != 0)
+			addIfNotEmpty(b, "timeout", this.timeOut + "");
+	    addIfNotEmpty(b, "retries", this.retries + "");
+		addIfNotEmpty(b, "priority", this.priority+"");
+		addIfNotEmpty(b, "manualexecution", "N");
+		for (String country : countries) {
+			b.addParameter("country", country);
+		}
+
+		if (!StringUtils.isEmpty(manualHost)) {
+			addIfNotEmpty(b, "manualurl", "2");
+			addIfNotEmpty(b, "myhost", manualHost);
+			addIfNotEmpty(b, "mycontextroot", manualContextRoot);
+		}
+
+		return new URL(b.build().toString());
+	}
+
+	public void addIfNotEmpty(URIBuilder b, String key, String value) {
+	    if(!StringUtils.isEmpty(value))
+		    b.addParameter(key,value);
 	}
 
 	public String getTagCerberus() {
