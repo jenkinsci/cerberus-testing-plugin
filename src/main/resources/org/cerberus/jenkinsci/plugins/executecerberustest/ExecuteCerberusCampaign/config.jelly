@@ -14,7 +14,6 @@
 		<f:textbox default="${JOB_NAME}-$[current_timestamp]"/>
 	</f:entry>
 
-
 	<f:advanced >
 		<f:entry title="Manual Host" field="manualHost" description="Override host of the application to test">
 			<f:textbox />
@@ -22,9 +21,7 @@
 		<f:entry title="Manual ContextRoot" field="manualContextRoot" description="Override context Root.">
 			<f:textbox />
 		</f:entry>
-	</f:advanced>
 
-	<f:advanced >
 		<f:entry title="Environment" field="environment" description="Environment Cerberus must use">
 			<f:textbox />
 		</f:entry>
@@ -32,9 +29,7 @@
 		<f:entry title="Robot" field="robot" description="Robot (use global settings by default)">
 			<f:textbox />
 		</f:entry>
-	</f:advanced>
 
-	<f:advanced >
 		<f:entry title="Robot server IP" field="ssIp" description="Robot server IP. If empty, use the global attribute.">
 			<f:textbox />
 		</f:entry>

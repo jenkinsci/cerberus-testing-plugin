@@ -73,7 +73,6 @@ public class ExecuteCampaign {
 			return true;
 		}
 
-
 		String contains="";
 
 		try {
@@ -83,7 +82,7 @@ public class ExecuteCampaign {
 		}
 
 		// log error message
-		logEvent.log("Error message when trying to add a new exectution in queue : " + conn.getResponseMessage(), contains, "");
+		logEvent.log("Error message when trying to add a new execution in queue : " + conn.getResponseMessage(), contains, "");
 
 		return false;
 	}

@@ -117,7 +117,7 @@ public class CheckCampaignStatus {
 		, 0, this.timeToRefreshCampaignStatus, TimeUnit.SECONDS);
 
 		if(!sch.awaitTermination(this.timeoutForCampaignExecution, TimeUnit.SECONDS)) {
-			logEvent.log("interruped by timeout of "+ this.timeoutForCampaignExecution + "ms (see global settings fo Cerberus Plugin)","");
+			logEvent.log("interruped by timeout of "+ this.timeoutForCampaignExecution + "ms (see global settings fo Cerberus Plugin)","","");
 			result.result(null);
 		}
 

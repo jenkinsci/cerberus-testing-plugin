@@ -32,16 +32,16 @@ import org.cerberus.launchcampaign.Constantes;
 
 public class ExecuteCampaignDto {
 
-	private String robot;
-	private String ss_ip;
-	private String environment;
-	private String browser;
-	private String selectedCampaign;
-	private String tagCerberusCampaign;
-	private String ss_p;
+	private final String robot;
+	private final String ss_ip;
+	private final String environment;
+	private final String browser;
+	private final String selectedCampaign;
+	private final String tagCerberusCampaign;
+	private final String ss_p;
 	private final List<String> countries;
-	private String manualHost;
-	private String manualContextRoot;
+	private final String manualHost;
+	private final String manualContextRoot;
 
 	private final int screenshot; 
 	private final int verbose;        
@@ -53,7 +53,7 @@ public class ExecuteCampaignDto {
 	
 	
 	public ExecuteCampaignDto(final String robot, final String ss_ip, final String environment, final String browser, final String selectedCampaign, final int screenshot, final int verbose,
-			final int pageSource, final int seleniumLog, final int timeOut, final int priority, final int retries, String tag, String ss_p, String manualHost, String manualContextRoot, List<String> countries) {
+			final int pageSource, final int seleniumLog, final int timeOut, final int priority, final int retries, final String tag, final String ss_p, final String manualHost, final String manualContextRoot, List<String> countries) {
 		super();
 		this.robot = robot;
 		this.ss_ip = ss_ip;
@@ -121,30 +121,31 @@ public class ExecuteCampaignDto {
 	public URL buildUrl(String urlCerberus) throws MalformedURLException, URISyntaxException {
 		URIBuilder b = new URIBuilder(urlCerberus + "/" + Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE);
 
-
 		addIfNotEmpty(b, "campaign", this.selectedCampaign);
-		addIfNotEmpty(b,"tag", tagCerberusCampaign);
+		addIfNotEmpty(b, "tag", tagCerberusCampaign);
 		addIfNotEmpty(b, "environment", environment);
 		addIfNotEmpty(b, "robot", robot);
 		addIfNotEmpty(b, "ss_ip", ss_ip);
 		addIfNotEmpty(b, "ss_p", ss_p);
 		addIfNotEmpty(b, "browser", browser);
-		addIfNotEmpty(b,"screenshot",this.screenshot+"");
+		addIfNotEmpty(b, "screenshot",this.screenshot + "");
 		addIfNotEmpty(b, "verbose", this.verbose + "");
 		addIfNotEmpty(b, "pagesource", this.pageSource + "");
 		addIfNotEmpty(b, "seleniumlog", this.seleniumLog + "");
 
-		if(this.timeOut != 0)
+		if(this.timeOut != 0) {
 			addIfNotEmpty(b, "timeout", this.timeOut + "");
+		}
 	    addIfNotEmpty(b, "retries", this.retries + "");
 		addIfNotEmpty(b, "priority", this.priority+"");
-		addIfNotEmpty(b, "manualexecution", "N");
+		b.addParameter("manualexecution", "N");
+		
 		for (String country : countries) {
 			b.addParameter("country", country);
 		}
 
 		if (!StringUtils.isEmpty(manualHost)) {
-			addIfNotEmpty(b, "manualurl", "2");
+			b.addParameter("manualurl", "2");
 			addIfNotEmpty(b, "myhost", manualHost);
 			addIfNotEmpty(b, "mycontextroot", manualContextRoot);
 		}
