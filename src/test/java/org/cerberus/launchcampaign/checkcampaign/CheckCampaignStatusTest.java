@@ -25,11 +25,15 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.cerberus.launchcampaign.*;
+import org.cerberus.launchcampaign.Constantes;
+import org.cerberus.launchcampaign.ResourceFile;
 import org.cerberus.launchcampaign.event.LogEvent;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockserver.client.server.MockServerClient;
 import org.mockserver.junit.MockServerRule;
@@ -58,7 +62,7 @@ public class CheckCampaignStatusTest {
 		
 		logEvent = new LogEvent() {			
 			@Override
-			public void log(String error, String warning) {
+			public void log(String error, String warning, String info) {
 			}
 		};
 	}

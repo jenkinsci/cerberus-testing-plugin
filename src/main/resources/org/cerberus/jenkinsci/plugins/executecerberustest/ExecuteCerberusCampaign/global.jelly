@@ -13,7 +13,7 @@
 			description="Url of cerberus">
 			<f:textbox />
 		</f:entry>
-		<f:entry title="Default Robot" field="robot" description="Robot">
+		<f:entry title="Default Robot" field="robot" description="Robot, keep empty if you want to use campaigns value">
 			<f:textbox />
 		</f:entry>
 		
@@ -33,15 +33,8 @@
 			<f:entry title="Default Robot server port" field="ss_p" description="Default Robot serveur port">
 				<f:textbox />
 			</f:entry>
-			<f:entry title="Default Robot server platform" field="platform" description="Default Robot server platform">
-				<f:textbox />
-			</f:entry>
 			<f:entry title="Default Browser" field="browser"
 				description="Default browser than Cerberus will use to execute test">
-				<f:textbox />
-			</f:entry>
-			<f:entry title="Default Browser Version" field="browserVersion"
-				description="Default browser version than Cerberus will use to execute test">
 				<f:textbox />
 			</f:entry>
 		</f:advanced>

@@ -28,10 +28,9 @@ Cerberus is an open source, user friendly, **automated testing sofware**. See [w
 ### On Jenkinsfile
 * Just call `executeCerberusCampaigne` function with parameters :
 	* `campaignName` : Campaign name to execute
-	* `platform` :  Platform to execute (define into Cerberus)
+	* `Tag` : Tag to apply
 	* `environment` :  Environment to execute (define into Cerberus)
 	* `browser` : Browser executed by Cerberus to test application. If `browser` is empty, use global settings of Cerberus plugin.
-	* `browserVersion` :  Browser version executed by Cerberus to test application. If `browserVersion` is empty, use global settings of Cerberus plugin.
    
 ```
 pipeline {	
@@ -40,7 +39,7 @@ pipeline {
 		...
 		stage('cerberus Test') {
 			steps {					
-				executeCerberusCampaign campaignName : "Test_campaign" , platform : "", environment : "QA", browser : "firefox", browserVersion : "47"
+				executeCerberusCampaign campaignName : "Test_campaign" , tag : "Test_campaign_YYYYMMDDHHmmss", environment : "QA", browser : "firefox"
 			}
 		}		
 		...
@@ -174,7 +173,12 @@ Pull cerberus jenkins plugin and launch this cmd on project :
 mvn release:prepare release:perform
 ```
 
-Don't forget to ask a pull request from jenkinsci to cerberustesting github after sucess operation
+Check if your new version is in https://updates.jenkins-ci.org/update-center.json. This file is updated every 4 hours (plus mirror propagation time), so there's some delay before your new version appears here. So, as a rule of thumbs, please wait at least 8 hours before starting to worry about any issue.
+
+
+==> Don't forget to ask a pull request from jenkinsci to cerberustesting github after sucess operation
+
+
 
 ## License
 

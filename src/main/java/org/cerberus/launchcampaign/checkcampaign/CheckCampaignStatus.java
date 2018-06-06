@@ -19,8 +19,11 @@
  */
 package org.cerberus.launchcampaign.checkcampaign;
 
-import java.net.*;
-import java.util.concurrent.*;
+import java.net.SocketException;
+import java.net.URL;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -104,7 +107,7 @@ public class CheckCampaignStatus {
 					}
 				} catch (SocketException e ) {
 					// do nothing during network problem. Wait the timeout to shutdown, and notify the error to logEvent
-					logEvent.log("", e.getMessage() + "\n" +  ExceptionUtils.getStackTrace(e));
+					logEvent.log("", e.getMessage() + "\n" +  ExceptionUtils.getStackTrace(e), "");
 				}catch (Exception e ) {
 					exceptionOnThread.set(e);
 					sch.shutdown();
@@ -113,8 +116,11 @@ public class CheckCampaignStatus {
 		}
 		, 0, this.timeToRefreshCampaignStatus, TimeUnit.SECONDS);
 
-		sch.awaitTermination(this.timeoutForCampaignExecution, TimeUnit.SECONDS);
-		
+		if(!sch.awaitTermination(this.timeoutForCampaignExecution, TimeUnit.SECONDS)) {
+			logEvent.log("interruped by timeout of "+ this.timeoutForCampaignExecution + "ms (see global settings fo Cerberus Plugin)","","");
+			result.result(null);
+		}
+
 		// pass exeption of thread to called method
 		if (exceptionOnThread.get() != null) {
 		   throw exceptionOnThread.get();

@@ -20,7 +20,10 @@
 package org.cerberus.launchcampaign.executecampaign;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Arrays;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.StringUtils;
@@ -48,8 +51,7 @@ public class ExecuteCampaign {
 
 		String warning = executeCampaignDto.verifyParameterWarning();
 		String error = executeCampaignDto.verifyParameterError();
-		
-		logEvent.log(error, warning);
+		logEvent.log(error, warning, "");
 		
 		if(!StringUtils.isEmpty(error)) {
 			throw new IllegalArgumentException(error);
@@ -58,16 +60,30 @@ public class ExecuteCampaign {
 		URL urlExecuteCampaign = executeCampaignDto.buildUrl(urlCerberus);
 		HttpURLConnection  conn = (HttpURLConnection) urlExecuteCampaign.openConnection();
 		conn.setRequestMethod("GET");
-
 		conn.connect();
-
 		int code = conn.getResponseCode();
-		if(HttpStatus.SC_OK == code) 
+		logEvent.log("", "", "HTTP response : " + code);
+
+		if(HttpStatus.SC_OK == code) {
+			logEvent.log("", "", "Cerberus response message : " + conn.getResponseMessage());
+			logEvent.log("", "", "Requesting Cerberus with the following parameters : ");
+			for (String param : Arrays.asList(urlExecuteCampaign.getQuery().split("&"))) {
+				logEvent.log("", "", param);
+			}
 			return true;
-		
+		}
+
+		String contains="";
+
+		try {
+			contains = conn.getInputStream().toString();
+		} catch (Exception e) {
+			// do nothing
+		}
+
 		// log error message
-		logEvent.log("Error message when trying to add a new exectution in queue : " + conn.getResponseMessage(),"");		
-		
+		logEvent.log("Error message when trying to add a new execution in queue : " + conn.getResponseMessage(), contains, "");
+
 		return false;
 	}
 }

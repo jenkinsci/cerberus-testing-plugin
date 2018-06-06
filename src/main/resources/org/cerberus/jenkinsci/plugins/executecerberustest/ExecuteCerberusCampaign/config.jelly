@@ -13,17 +13,23 @@
 	<f:entry title="Cerberus Tag" field="tag" description="Tag for this campaign" >
 		<f:textbox default="${JOB_NAME}-$[current_timestamp]"/>
 	</f:entry>
-	
-	<f:entry title="Environment" field="environment" description="Environment Cerberus must use">
-		<f:textbox />
-	</f:entry>
-		
-	<f:entry title="Robot" field="robot" description="Robot (use global settings by default)">
-		<f:textbox />
-	</f:entry>
-	
-	
+
 	<f:advanced >
+		<f:entry title="Manual Host" field="manualHost" description="Override host of the application to test">
+			<f:textbox />
+		</f:entry>
+		<f:entry title="Manual ContextRoot" field="manualContextRoot" description="Override context Root.">
+			<f:textbox />
+		</f:entry>
+
+		<f:entry title="Environment" field="environment" description="Environment Cerberus must use">
+			<f:textbox />
+		</f:entry>
+
+		<f:entry title="Robot" field="robot" description="Robot (use global settings by default)">
+			<f:textbox />
+		</f:entry>
+
 		<f:entry title="Robot server IP" field="ssIp" description="Robot server IP. If empty, use the global attribute.">
 			<f:textbox />
 		</f:entry>
@@ -31,26 +37,15 @@
 		<f:entry title="Robot server port" field="ss_p" description="Robot server port. If empty, use the global attribute.">
 			<f:textbox />
 		</f:entry>
-		
-		<f:entry title="Platform" field="platform" description="Platform Cerberus must use. If empty, use the global attribute.">
-			<f:textbox />
-		</f:entry>
 	
 		<f:entry title="Browser" field="browser" description="Browser than Cerberus will use to execute test. If empty, use the global attribute.">
-			<f:textbox />
-		</f:entry>
-		<f:entry title="Browser Version" field="browserVersion" description="Browser than Cerberus will use to execute test. If empty, use the global attribute.">
 			<f:textbox />
 		</f:entry>
 
 		<f:entry title="Screenshot" field="screenshot" description="Enable screenshot on Cerberus ( 0 - No screenshot / 1 - Screenshot on error / 2 - Screenshot on every action)">
 			<f:textbox default="1"/>
 		</f:entry>		
-		
-		<f:entry title="screensize" field="screensize" description="Screen size format : width*height (ex : 1080x800)">
-			<f:textbox />
-		</f:entry>
-		
+
 		<f:entry title="Verbose" field="verbose" description="Verbose mode on Cerberus ( 0 - Minimum log / 1 - Standard log / 2 - Maximum log)" >
 			<f:textbox default="1"/>
 		</f:entry>
@@ -70,8 +65,15 @@
 		<f:entry title="Retries" field="retries" description="Enable Cerberus to retry a test many times (0, 1, 2 or 3 - number of retry in case of not OK)" >
 			<f:textbox default="0"/>
 		</f:entry>
-	
-	</f:advanced>
 
+		<f:entry title="Priority" field="priority" description="Define an order of priority in Cerberus to prioritize the campaign execution order (the lowest number, the highest priority)" >
+			<f:textbox default="1000"/>
+		</f:entry>
+
+		<f:entry title="Country" field="country" description="List of countries to execute campaign on (comma separated if several countries, for example : 'FR' or 'FR,UK,BE')" >
+			<f:textbox />
+		</f:entry>
+
+	</f:advanced>
 	
 </j:jelly>

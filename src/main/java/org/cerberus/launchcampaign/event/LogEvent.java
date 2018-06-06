@@ -12,5 +12,5 @@ public interface LogEvent {
 	 * 
 	 * @param resultDto {@link ResultCIDto} contains all information of execution at finish time
 	 */
-	public void log(String error, String warning);
+	public void log(String error, String warning, String info);
 }
