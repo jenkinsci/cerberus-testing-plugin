@@ -19,12 +19,16 @@ Cerberus is an open source, user friendly, **automated testing sofware**. See [w
 ## Get started
 * Install plugin on Jenkins
 * Set parameters on "Manage Jenkins" / "Configure System" screen (under "Execute Cerberus Test" section) : 
+
 ![global_parameter](docs/global_parameter.png "Global parameter")
+
 ![global_parameter](docs/global_parameter_adv.png "Global parameter Advanced")
 
 ### On Jenkins
 * To add a campaign Cerberus execution on a job, add a new build step "Execute Cerberus Campaign", and set parameters :
+
 ![build_parameter](docs/build_parameter.png "Build parameter")
+
 ![build_parameter](docs/build_parameter_adv.png "Build parameter Advanced")
  
 
