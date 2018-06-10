@@ -77,7 +77,7 @@ public class ExecuteCampaignTest {
 	
 	@Test
 	public void executeFail() throws Exception {
-		mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(404));
+		mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(404).withBody("404 Error."));
 		
 		// execute
 		boolean success = executeCampaign.execute(logEvent);
