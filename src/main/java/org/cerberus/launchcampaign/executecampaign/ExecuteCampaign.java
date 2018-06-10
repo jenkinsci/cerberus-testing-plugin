@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.StringUtils;
@@ -66,17 +67,26 @@ public class ExecuteCampaign {
         logEvent.log("", "", "Cerberus called with : " + urlExecuteCampaign.toString());
         logEvent.log("", "", "HTTP response : " + code + " " + conn.getResponseMessage());
 
-        BufferedReader br;
-        if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
-            br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        } else {
-            br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-        }
+//        BufferedReader br;
         StringBuilder sb;
         sb = new StringBuilder();
         String output;
-        while ((output = br.readLine()) != null) {
-            sb.append(output);
+        if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
+            try (InputStreamReader s = new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(s)) {
+                    while ((output = br.readLine()) != null) {
+                        sb.append(output);
+                    }
+                }
+            }
+        } else {
+            try (InputStreamReader s = new InputStreamReader(conn.getErrorStream(), Charset.forName("UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(s)) {
+                    while ((output = br.readLine()) != null) {
+                        sb.append(output);
+                    }
+                }
+            }
         }
 
         String contains = sb.toString();

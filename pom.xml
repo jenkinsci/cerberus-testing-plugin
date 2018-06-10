@@ -82,6 +82,11 @@
             <name>Nicolas Deblock</name>
             <email>nico.deblock@gmail.com</email>
         </developer>
+        <developer>
+            <id>vertigo17</id>
+            <name>Benoit Dumont</name>
+            <email>vertigo17@free.fr</email>
+        </developer>
     </developers>
 
     <repositories>
