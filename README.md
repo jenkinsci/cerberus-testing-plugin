@@ -12,23 +12,30 @@ Cerberus is an open source, user friendly, **automated testing sofware**. See [w
 | cerberus jenkins plugin | cerberus                |
 | ----------------------- | ----------------------- |
 | 1.0.0 -> 1.0.1          | 1.11.0 -> 1.13.2        |
-| 1.0.2 -> today version  | 1.14.0 -> today version |
+| 1.0.2 -> 1.0.4          | 1.14.0 -> 3.2           |
+| 1.0.4 -> 1.0.5          | 3.3 -> today version    |
 
 
 ## Get started
 * Install plugin on Jenkins
-* Set parameters on "Manage Jenkins" screen : 
+* Set parameters on "Manage Jenkins" / "Configure System" screen (under "Execute Cerberus Test" section) : 
+
 ![global_parameter](docs/global_parameter.png "Global parameter")
+
+![global_parameter](docs/global_parameter_adv.png "Global parameter Advanced")
 
 ### On Jenkins
 * To add a campaign Cerberus execution on a job, add a new build step "Execute Cerberus Campaign", and set parameters :
+
 ![build_parameter](docs/build_parameter.png "Build parameter")
+
+![build_parameter](docs/build_parameter_adv.png "Build parameter Advanced")
  
 
 ### On Jenkinsfile
-* Just call `executeCerberusCampaigne` function with parameters :
+* Just call `executeCerberusCampaign` function with parameters :
 	* `campaignName` : Campaign name to execute
-	* `Tag` : Tag to apply
+	* `tag` : Tag to apply
 	* `environment` :  Environment to execute (define into Cerberus)
 	* `browser` : Browser executed by Cerberus to test application. If `browser` is empty, use global settings of Cerberus plugin.
    
@@ -94,7 +101,7 @@ $ mvn -DdownloadSources=true -DdownloadJavadocs=true -DoutputDirectory=target/ec
 ### Code
 `ExecuteCerberusCampaign` is the main class call by Jenkins. 
 It use :
-* `ExecuteCampaign` who add Cerberus campaign to Ceberus Queue.
+* `ExecuteCampaign` who add Cerberus campaign to Cerberus Queue.
 ```java
 executeCampaign.execute();
 ```
