@@ -60,14 +60,15 @@ public class ExecuteCampaign {
         }
 
         URL urlExecuteCampaign = executeCampaignDto.buildUrl(urlCerberus);
+
+        logEvent.log("", "", "Trigger Cerberus call : " + urlExecuteCampaign.toString().replace("?" + urlExecuteCampaign.getQuery(), "") + " with query String : " + urlExecuteCampaign.getQuery());
+
         HttpURLConnection conn = (HttpURLConnection) urlExecuteCampaign.openConnection();
         conn.setRequestMethod("GET");
         conn.connect();
         int code = conn.getResponseCode();
-        logEvent.log("", "", "Cerberus called with : " + urlExecuteCampaign.toString());
         logEvent.log("", "", "HTTP response : " + code + " " + conn.getResponseMessage());
 
-//        BufferedReader br;
         StringBuilder sb;
         sb = new StringBuilder();
         String output;
@@ -93,8 +94,6 @@ public class ExecuteCampaign {
 
         if (HttpStatus.SC_OK == code) {
             logEvent.log("", "", "Response : " + contains);
-//			logEvent.log("", "", "Cerberus response message : " + conn.getResponseMessage());
-//			logEvent.log("", "", "Requesting Cerberus with the following parameters : ");
             return true;
         }
 
