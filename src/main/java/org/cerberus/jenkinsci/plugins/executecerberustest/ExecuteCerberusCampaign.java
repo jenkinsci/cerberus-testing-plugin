@@ -87,9 +87,6 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
     private final String tag; // default is 'Jenkins--' + current timestamp
     private final String country;
 
-    private static final List<String> listZeroToTwo = Arrays.asList("0", "1", "2");
-    private static final List<String> listZeroToThree = Arrays.asList("0", "1", "2", "3");
-
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
     public ExecuteCerberusCampaign(final String campaignName, final String environment, final String browser,
@@ -314,27 +311,22 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
+        private static final List<String> listZeroToTwo = Arrays.asList("0", "1", "2");
+        
+        /**
+         * Check if parameter is not null & equal to 0, 1 or 2
+         */
         private static FormValidation isInListZeroToTwo(String value) {
-            if (StringUtils.isBlank(value)) {
+            if (StringUtils.isBlank(value) || (StringUtils.isNotBlank(value) && listZeroToTwo.contains(value.trim()))) {
                 return FormValidation.ok();
             }
-            if (StringUtils.isNotBlank(value)) {
-                if (listZeroToTwo.contains(value.trim())) {
-                    return FormValidation.ok();
-                }
-            }
+
             return FormValidation.error("Parameter value must be equal to 0, 1 or 2");
         }
 
-        private static FormValidation isInListZeroToThree(String value) {
-            if (StringUtils.isNotBlank(value)) {
-                if (listZeroToThree.contains(value.trim())) {
-                    return FormValidation.ok();
-                }
-            }
-            return FormValidation.error("Parameter value must be equal to 0, 1, 2 or 3");
-        }
-
+        /**
+         * Check if parameter is set
+         */
         private static FormValidation isParameterRequired(String value) {
             if (StringUtils.isNotBlank(value)) {
                 return FormValidation.ok();
@@ -343,6 +335,9 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
             }
         }
 
+        /**
+         * Check if parameter is a number
+         */
         private static FormValidation isValidNumber(String value) {
             if (StringUtils.isBlank(value)) {
                 return FormValidation.ok();
@@ -356,34 +351,65 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
             }
         }
 
+        /**
+         * Check if campaign name parameter is set. Otherwise display an error message
+         */
         public FormValidation doCheckCampaignName(@QueryParameter String value) {
             return isParameterRequired(value);
         }
+        
+        /**
+         * Check if tag parameter is set. Otherwise display an error message
+         */
+        public FormValidation doCheckTag(@QueryParameter String value) {
+            return isParameterRequired(value);
+        }
 
+        /**
+         * Check if screenshot parameter is correct
+         */
         public FormValidation doCheckScreenshot(@QueryParameter String value) {
             return isInListZeroToTwo(value);
         }
 
+        /**
+         * Check if verbose parameter is correct
+         */
         public static FormValidation doCheckVerbose(@QueryParameter String value) {
             return isInListZeroToTwo(value);
         }
 
+        /**
+         * Check if page source parameter is correct
+         */
         public static FormValidation doCheckPageSource(@QueryParameter String value) {
             return isInListZeroToTwo(value);
         }
 
+        /**
+         * Check if selenium log parameter is correct
+         */
         public static FormValidation doCheckSeleniumLog(@QueryParameter String value) throws IOException, ServletException {
             return isInListZeroToTwo(value);
         }
 
+        /**
+         * Check if time out parameter is correct
+         */
         public static FormValidation doCheckTimeOut(@QueryParameter String value) throws IOException, ServletException {
             return isValidNumber(value);
         }
 
+        /**
+         * Check if retry parameter is correct
+         */
         public static FormValidation doCheckRetries(@QueryParameter String value) {
             return isValidNumber(value);
         }
 
+        /**
+         * Check if priority parameter is correct
+         */
         public static FormValidation doCheckPriority(@QueryParameter String value) throws IOException, ServletException {
             return isValidNumber(value);
         }
