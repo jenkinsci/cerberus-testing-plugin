@@ -31,6 +31,7 @@ import org.cerberus.launchcampaign.checkcampaign.ResultCIDto;
 import org.cerberus.launchcampaign.event.LogEvent;
 import org.cerberus.launchcampaign.executecampaign.ExecuteCampaign;
 import org.cerberus.launchcampaign.executecampaign.ExecuteCampaignDto;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -306,6 +307,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	 * See {@code src/main/resources/org/cerberus/jenkinsci/plugins/executecerberustest/ExecuteCerberusCampaign/*.jelly}
 	 * for the actual HTML fragment for the configuration screen.
 	 */
+    @Symbol("executeCerberusCampaign") // name of method to use on pipeline syntax
 	@Extension // This indicates to Jenkins that this is an implementation of an extension point.
 	public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 

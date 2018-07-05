@@ -12,7 +12,8 @@ Cerberus is an open source, user friendly, **automated testing sofware**. See [w
 | cerberus jenkins plugin | cerberus                |
 | ----------------------- | ----------------------- |
 | 1.0.0 -> 1.0.1          | 1.11.0 -> 1.13.2        |
-| 1.0.2 -> today version  | 1.14.0 -> today version |
+| 1.0.2 -> 1.03           | 1.14.0 -> 3.4           |
+| 1.0.4 -> today version  | 1.14.0 -> today version |
 
 
 ## Get started
