@@ -25,7 +25,6 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.cerberus.launchcampaign.Constantes;
 import org.cerberus.launchcampaign.event.LogEvent;
@@ -51,7 +50,7 @@ public class ExecuteCampaignTest {
 
 	@Before
 	public void before() {
-		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, "", "", "", "", new ArrayList<String>());
+		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", new ArrayList<String>());
 
 		urlAddCampaign = "http://localhost:" + mockServerRule.getPort() + "/Cerberus/"+Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE;
 		executeCampaign = new ExecuteCampaign(urlAddCampaign, executeCampaignDto);
@@ -78,7 +77,7 @@ public class ExecuteCampaignTest {
 	
 	@Test
 	public void executeFail() throws Exception {
-		mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(404));
+		mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(404).withBody("404 Error."));
 		
 		// execute
 		boolean success = executeCampaign.execute(logEvent);

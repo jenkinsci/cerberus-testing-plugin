@@ -18,6 +18,7 @@
  * along with Cerberus.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.cerberus.jenkinsci.plugins.executecerberustest;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,83 +57,79 @@ import net.sf.json.JSONObject;
  *
  * <p>
  * When the user configures the project and enables this builder,
- * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
- * and a new {@link ExecuteCerberusCampaign} is created. The created
- * instance is persisted to the project configuration XML by using
- * XStream, so this allows you to use instance fields (like {@link #campaignName})
- * to remember the configuration.
+ * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked and a new
+ * {@link ExecuteCerberusCampaign} is created. The created instance is persisted
+ * to the project configuration XML by using XStream, so this allows you to use
+ * instance fields (like {@link #campaignName}) to remember the configuration.
  *
  * <p>
- * When a build is performed, the {@link #perform} method will be invoked. 
+ * When a build is performed, the {@link #perform} method will be invoked.
  *
  * @author Nicolas Deblock
  */
-public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep  {
+public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep {
 
-	private final String campaignName;
-	private final String environment;
-	private final String browser;
-	private final String ssIp;
-	private final String ss_p;
-	private final String robot;
-	private final String manualHost;
-	private final String manualContextRoot;
+    private final String campaignName;
+    private final String environment;
+    private final String browser;
+    private final String ssIp;
+    private final String ss_p;
+    private final String robot;
+    private final String manualHost;
+    private final String manualContextRoot;
 
-	private final int screenshot; // default is 1
-	private final int verbose; // default is 1       
-	private final int pageSource; // default is 1
-	private final int seleniumLog; // default is 1
-	private final int timeOut; // default is 5000
-	private final int retries; // default is 0
-	private final int priority; // default is 1000
-	private final String tag; // default is 'Jenkins--' + current timestamp
-	private final String country;
+    private final String screenshot; // default is 1
+    private final String verbose; // default is 1
+    private final String pageSource; // default is 1
+    private final String seleniumLog; // default is 1
+    private final String timeOut; // default is 5000
+    private final String retries; // default is 0
+    private final String priority; // default is 1000
+    private final String tag; // default is 'Jenkins--' + current timestamp
+    private final String country;
 
-	private static final List<String> listZeroToTwo = Arrays.asList("0", "1", "2");
-	private static final List<String> listZeroToThree = Arrays.asList("0", "1", "2", "3");
+    // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
+    @DataBoundConstructor
+    public ExecuteCerberusCampaign(final String campaignName, final String environment, final String browser,
+            final String screenshot, final String verbose, final String pageSource, final String seleniumLog, final String timeOut,
+            final String retries, final String priority, final String tag, final String ss_p, final String ssIp, final String robot,
+            final String manualHost, final String manualContextRoot, final String country) {
 
-	// Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
-	@DataBoundConstructor
-	public ExecuteCerberusCampaign(final String campaignName, final String environment, final String browser, 
-			final int screenshot, final int verbose, final int pageSource, final int seleniumLog, final int timeOut, 
-			final int retries, final int priority, final String tag, final String ss_p, final String ssIp, final String robot,
-			final String manualHost, final String manualContextRoot, final String country) {
-		
-		this.campaignName = campaignName;
-		this.environment= environment;
-		this.browser = browser;
-		this.screenshot = screenshot;
-		this.verbose = verbose;
-		this.pageSource = pageSource;
-		this.seleniumLog = seleniumLog;
-		this.timeOut = timeOut;
-		this.retries = retries;
-		this.priority = priority;
-		this.tag = tag;
-		this.ss_p = ss_p;
-		this.ssIp = ssIp;
-		this.robot = robot;
-		this.manualHost = manualHost;
-		this.manualContextRoot = manualContextRoot;
-		this.country = country;
-	}
+        this.campaignName = campaignName;
+        this.environment = environment;
+        this.browser = browser;
+        this.screenshot = screenshot;
+        this.verbose = verbose;
+        this.pageSource = pageSource;
+        this.seleniumLog = seleniumLog;
+        this.timeOut = timeOut;
+        this.retries = retries;
+        this.priority = priority;
+        this.tag = tag;
+        this.ss_p = ss_p;
+        this.ssIp = ssIp;
+        this.robot = robot;
+        this.manualHost = manualHost;
+        this.manualContextRoot = manualContextRoot;
+        this.country = country;
+    }
 
-	@Override
-	public void perform(final Run<?,?> build, final FilePath workspace, final Launcher launcher, final TaskListener listener) {
-		final JenkinsLogger logger = new JenkinsLogger(listener.getLogger());
-		
-		try {
+    @Override
+    public void perform(final Run<?, ?> build, final FilePath workspace, final Launcher launcher, final TaskListener listener) {
+        final JenkinsLogger logger = new JenkinsLogger(listener.getLogger());
+
+        try {
             // calucation of tag and campaign name
-	        EnvVars env = build.getEnvironment(listener);
+            EnvVars env = build.getEnvironment(listener);
             final String expandedCampaignName = env.expand(this.campaignName);
             final String expandedTag = env.expand(this.tag);
 
             // first, control parameters
             if (StringUtils.isBlank(Util.fixEmptyAndTrim(expandedCampaignName))) {
-                logger.error("Campaign parameter is empty and is a required parameter. Cannot perform build");
+                logger.error("Campaign parameter is empty (Mandatory parameter). Cannot perform build");
                 build.setResult(Result.FAILURE);
             } else if (StringUtils.isBlank(Util.fixEmptyAndTrim(expandedTag))) {
-                logger.error("Cerberus Tag parameter is empty and is a required parameter. Cannot perform build");
+                logger.error("Cerberus Tag parameter is empty (Mandatory parameter). Cannot perform build");
                 build.setResult(Result.FAILURE);
             } else {
                 // overide attribute if local settings is empty
@@ -165,16 +162,16 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                         if (!StringUtils.isEmpty(error)) {
                             logger.error(error);
                         }
-						if(!StringUtils.isEmpty(info)) {
-							logger.info(info);
-						}
+                        if (!StringUtils.isEmpty(info)) {
+                            logger.info(info);
+                        }
                     }
                 };
 
                 final ExecuteCampaign executeCampaign = new ExecuteCampaign(getDescriptor().getUrlCerberus(), executeCampaignDto);
                 if (executeCampaign.execute(logEvent)) {
                     // 2 - check if cerberus campaign is finish
-                	String urlCerberusReport = getDescriptor().getUrlCerberus() + "/ReportingExecutionByTag.jsp?Tag=" + executeCampaignDto.getTagCerberus();
+                    String urlCerberusReport = getDescriptor().getUrlCerberus() + "/ReportingExecutionByTag.jsp?Tag=" + executeCampaignDto.getTagCerberus();
                     logger.info("Campaign is launched successfully. You can follow the report here : " + urlCerberusReport);
 
                     CheckCampaignStatus checkCampaignStatus = new CheckCampaignStatus(executeCampaignDto.getTagCerberus(), getDescriptor().getUrlCerberus(), getDescriptor().timeToRefreshCheckCampaignStatus, getDescriptor().timeOutForCampaignExecution);
@@ -182,25 +179,30 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 
                         @Override
                         public boolean checkCampaign(final ResultCIDto resultDto) {
-                            logger.info(resultDto.getTotalTestExecuted() + " test executed ... (" + resultDto.logDetailExecution() + ")");
-                            logger.info(resultDto.getTotal() - resultDto.getTotalTestExecuted() + " test pending ...");
-                            logger.info("cerberus message : " + resultDto.getMessage());
-                            logger.info("Advancement : " + resultDto.getPercentOfTestExecuted() + "%");
+//                            logger.info(resultDto.getTotalTestExecuted() + " test executed ... (" + resultDto.logDetailExecution() + ")");
+//                            logger.info(resultDto.getTotal() - resultDto.getTotalTestExecuted() + " test pending ...");
+//                            logger.info("Cerberus message : " + resultDto.getMessage());
+                            logger.info("Progress : " + resultDto.getPercentOfTestExecuted() + "% (" + resultDto.getTotalTestExecuted() + "/" + resultDto.getTotal() + ") still " + resultDto.getTestToExecute() + " to go - " + resultDto.logDetailExecution());
                             return true;
                         }
                     }, new CheckCampaignStatus.ResultEvent() {
 
                         @Override
                         public void result(final ResultCIDto resultDto) {
-                            // display result and shutdown
-                            long timeToExecuteTest = resultDto.getExecutionEnd().getTime() - resultDto.getExecutionStart().getTime();
-                            logger.info("---------------------------------------------------------------------------------------------");
-                            logger.info("Result : " + resultDto.getResult() + ", test executed in " + ((int) (timeToExecuteTest / 1000)) + "s " + ((int) (timeToExecuteTest % 1000)) + "ms");
-                            logger.info(resultDto.logDetailExecution());
-                            logger.info("---------------------------------------------------------------------------------------------");
+                            if (resultDto != null) {
+                                // display result and shutdown
+                                long timeToExecuteTest = resultDto.getExecutionEnd().getTime() - resultDto.getExecutionStart().getTime();
+                                logger.info("---------------------------------------------------------------------------------------------");
+                                logger.info("Result : " + resultDto.getResult() + " (Score : " + resultDto.getCiFinalResult() + "), campaign executed in " + ((int) (timeToExecuteTest / 1000)) + "s.");
+                                logger.info(resultDto.logDetailExecution());
+                                logger.info("---------------------------------------------------------------------------------------------");
 
-                            // fail if test is not OK
-                            if (!"OK".equals(resultDto.getResult())) {
+                                // fail if test is not OK
+                                if (!"OK".equals(resultDto.getResult())) {
+                                    logger.error("FAIL");
+                                    build.setResult(Result.FAILURE);
+                                }
+                            } else {
                                 logger.error("FAIL");
                                 build.setResult(Result.FAILURE);
                             }
@@ -209,66 +211,65 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 
                     logger.info("Campaign execution is finished. You can view the report here : " + urlCerberusReport);
                 } else {
-                    logger.error("Fail to add campaign " + campaignName + " in cerberus queue");
-                    logger.error("Think to check cerberus log or cerberus queue to resolve problem");
+                    logger.error("Failed to add campaign '" + campaignName + "' in Cerberus queue");
+                    logger.error("Please Check Cerberus log or Cerberus queue to resolve problem");
                     logger.error("UNSTABLE");
                     build.setResult(Result.FAILURE);
                 }
             }
-		} catch (Exception e) {
-			logger.error("error for campaign  " + campaignName + " : " , e);
-			logger.error("Think to check cerberus log or cerberus queue to resolve problem");
-			logger.error("UNSTABLE");
-			build.setResult(Result.FAILURE);
-		} 
-	}
-	
-	
-	public String getCampaignName() {
-		return campaignName;
-	}
+        } catch (Exception e) {
+            logger.error("Error for campaign  " + campaignName + " : ", e);
+            logger.error("Please Check Cerberus log or Cerberus queue to resolve problem");
+            logger.error("UNSTABLE");
+            build.setResult(Result.FAILURE);
+        }
+    }
 
-	public String getEnvironment() {
-		return environment;
-	}
+    public String getCampaignName() {
+        return campaignName;
+    }
 
-	public String getBrowser() {
-		return browser;
-	}
+    public String getEnvironment() {
+        return environment;
+    }
 
-	public int getScreenshot() {
-		return screenshot;
-	}
+    public String getBrowser() {
+        return browser;
+    }
 
-	public int getVerbose() {
-		return verbose;
-	}
+    public String getScreenshot() {
+        return screenshot;
+    }
 
-	public int getPageSource() {
-		return pageSource;
-	}
+    public String getVerbose() {
+        return verbose;
+    }
 
-	public int getSeleniumLog() {
-		return seleniumLog;
-	}
+    public String getPageSource() {
+        return pageSource;
+    }
 
-	public int getTimeOut() {
-		return timeOut;
-	}
+    public String getSeleniumLog() {
+        return seleniumLog;
+    }
 
-	public int getRetries() {
-		return retries;
-	}
+    public String getTimeOut() {
+        return timeOut;
+    }
 
-	public int getPriority() {
-		return priority;
-	}
+    public String getRetries() {
+        return retries;
+    }
 
-	public String getTag() {
-		return tag;
-	}
+    public String getPriority() {
+        return priority;
+    }
 
-	public String getSs_p() {
+    public String getTag() {
+        return tag;
+    }
+
+    public String getSs_p() {
         return ss_p;
     }
 
@@ -281,23 +282,23 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
     }
 
     public String getCountry() {
-		return country;
-	}
+        return country;
+    }
 
-	public String getManualHost() {
-		return manualHost;
-	}
+    public String getManualHost() {
+        return manualHost;
+    }
 
-	public String getManualContextRoot() {
-		return manualContextRoot;
-	}
+    public String getManualContextRoot() {
+        return manualContextRoot;
+    }
 
-	// If your plugin doesn't really define any property on Descriptor,
- 	// you don't have to do this.
- 	@Override
- 	public DescriptorImpl getDescriptor() {
- 		return (DescriptorImpl) super.getDescriptor();
- 	}
+    // If your plugin doesn't really define any property on Descriptor,
+    // you don't have to do this.
+    @Override
+    public DescriptorImpl getDescriptor() {
+        return (DescriptorImpl) super.getDescriptor();
+    }
 
 	/**
 	 * Descriptor for {@link ExecuteCerberusCampaign}. Used as a singleton.
@@ -308,190 +309,224 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	 * for the actual HTML fragment for the configuration screen.
 	 */
     @Symbol("executeCerberusCampaign") // name of method to use on pipeline syntax
-	@Extension // This indicates to Jenkins that this is an implementation of an extension point.
+    @Extension // This indicates to Jenkins that this is an implementation of an extension point.
 	public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-		private static FormValidation isInListZeroToTwo(String value) {
-			if(StringUtils.isNotBlank(value))  {
-				if(listZeroToTwo.contains(value.trim())) {
-					return FormValidation.ok();
-				}
-			}
-			return FormValidation.error("Parameter value must be equal to 0, 1 or 2");
-		}
+        private static final List<String> listZeroToTwo = Arrays.asList("0", "1", "2");
 
-		private static FormValidation isInListZeroToThree(String value) {
-			if(StringUtils.isNotBlank(value))  {
-				if(listZeroToThree.contains(value.trim())) {
-					return FormValidation.ok();
-				}
-			}
-			return FormValidation.error("Parameter value must be equal to 0, 1, 2 or 3");
-		}
+        /**
+         * Check if parameter is not null & equal to 0, 1 or 2
+         */
+        private static FormValidation isInListZeroToTwo(String value) {
+            if (StringUtils.isBlank(value) || (StringUtils.isNotBlank(value) && listZeroToTwo.contains(value.trim()))) {
+                return FormValidation.ok();
+            }
 
-		private static FormValidation isParameterRequired(String value) {
-			if(StringUtils.isNotBlank(value))  {
-				return FormValidation.ok();
-			} else {
-				return FormValidation.error("Parameter is required");
-			}
-		}
+            return FormValidation.error("Parameter value must be equal to 0, 1 or 2");
+        }
 
-		private static FormValidation isValidNumber(String value) {
-			if(StringUtils.isBlank(value))  {
-				return FormValidation.ok();
-			} else {
-				try {
-					Integer.parseInt(value);
-					return FormValidation.ok();
-				} catch (Exception e) {
-					return FormValidation.error("Parameter is not a valid number");
-			  }
-			}
-		}
+        /**
+         * Check if parameter is set
+         */
+        private static FormValidation isParameterRequired(String value) {
+            if (StringUtils.isNotBlank(value)) {
+                return FormValidation.ok();
+            } else {
+                return FormValidation.error("Parameter is required");
+            }
+        }
 
-		public FormValidation doCheckCampaignName(@QueryParameter String value) {
-			return isParameterRequired(value);
-		}
+        /**
+         * Check if parameter is a number
+         */
+        private static FormValidation isValidNumber(String value) {
+            if (StringUtils.isBlank(value)) {
+                return FormValidation.ok();
+            } else {
+                try {
+                    Integer.parseInt(value);
+                    return FormValidation.ok();
+                } catch (Exception e) {
+                    return FormValidation.error("Parameter is not a valid number");
+                }
+            }
+        }
 
-		public FormValidation doCheckScreenshot(@QueryParameter String value) {
-			return isInListZeroToTwo(value);
-		}
+        /**
+         * Check if campaign name parameter is set. Otherwise display an error message
+         */
+        public FormValidation doCheckCampaignName(@QueryParameter String value) {
+            return isParameterRequired(value);
+        }
 
-		public static FormValidation doCheckVerbose(@QueryParameter String value) {
-			return isInListZeroToTwo(value);
-		}
+        /**
+         * Check if tag parameter is set. Otherwise display an error message
+         */
+        public FormValidation doCheckTag(@QueryParameter String value) {
+            return isParameterRequired(value);
+        }
 
-		public static FormValidation doCheckPageSource(@QueryParameter String value) {
-			return isInListZeroToTwo(value);
-		}
+        /**
+         * Check if screenshot parameter is correct
+         */
+        public FormValidation doCheckScreenshot(@QueryParameter String value) {
+            return isInListZeroToTwo(value);
+        }
 
-		public static FormValidation doCheckSeleniumLog(@QueryParameter String value) throws IOException, ServletException {
-			return isInListZeroToTwo(value);
-		}
+        /**
+         * Check if verbose parameter is correct
+         */
+        public static FormValidation doCheckVerbose(@QueryParameter String value) {
+            return isInListZeroToTwo(value);
+        }
 
-		public static FormValidation doCheckTimeOut(@QueryParameter String value) throws IOException, ServletException {
-			return isValidNumber(value);
-		}
+        /**
+         * Check if page source parameter is correct
+         */
+        public static FormValidation doCheckPageSource(@QueryParameter String value) {
+            return isInListZeroToTwo(value);
+        }
 
-		public static FormValidation doCheckRetries(@QueryParameter String value) {
-			return isInListZeroToThree(value);
-		}
+        /**
+         * Check if selenium log parameter is correct
+         */
+        public static FormValidation doCheckSeleniumLog(@QueryParameter String value) throws IOException, ServletException {
+            return isInListZeroToTwo(value);
+        }
 
-		public static FormValidation doCheckPriority(@QueryParameter String value) throws IOException, ServletException {
-			return isValidNumber(value);
-		}
+        /**
+         * Check if time out parameter is correct
+         */
+        public static FormValidation doCheckTimeOut(@QueryParameter String value) throws IOException, ServletException {
+            return isValidNumber(value);
+        }
 
+        /**
+         * Check if retry parameter is correct
+         */
+        public static FormValidation doCheckRetries(@QueryParameter String value) {
+            return isValidNumber(value);
+        }
 
-		/**
-		 * To persist global configuration information,
-		 * simply store it in a field and call save().
-		 *
-		 * <p>
-		 * If you don't want fields to be persisted, use {@code transient}.
-		 */
-		private String urlCerberus;
-		private String robot;
-		private String ssIp;
-		private String ss_p;
-		private String browser;
-		private long timeToRefreshCheckCampaignStatus;
-		private int timeOutForCampaignExecution;
+        /**
+         * Check if priority parameter is correct
+         */
+        public static FormValidation doCheckPriority(@QueryParameter String value) throws IOException, ServletException {
+            return isValidNumber(value);
+        }
 
-		/**
-		 * In order to load the persisted global configuration, you have to 
-		 * call load() in the constructor.
-		 */
-		public DescriptorImpl() {
-			load();
-		}
+        /**
+         * To persist global configuration information, simply store it in a
+         * field and call save().
+         *
+         * <p>
+         * If you don't want fields to be persisted, use {@code transient}.
+         */
+        private String urlCerberus;
+        private String robot;
+        private String ssIp;
+        private String ss_p;
+        private String browser;
+        private long timeToRefreshCheckCampaignStatus;
+        private int timeOutForCampaignExecution;
 
-		/**
-		 * In order to load the persisted global configuration, you have to 
-		 * call load() in the constructor.
-		 */
-		public DescriptorImpl(boolean fortest) {
+        /**
+         * In order to load the persisted global configuration, you have to call
+         * load() in the constructor.
+         */
+        public DescriptorImpl() {
+            load();
+        }
 
-		}
+        /**
+         * In order to load the persisted global configuration, you have to call
+         * load() in the constructor.
+         */
+        public DescriptorImpl(boolean fortest) {
 
-		@Override
-		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
-			// Indicates that this builder can be used with all kinds of project types 
-			return true;
-		}
+        }
 
-		/**
-		 * This human readable name is used in the configuration screen.
-		 */
-		@Override
-		public String getDisplayName() {
-			return "Execute Cerberus Campaign";
-		}
+        @Override
+        public boolean isApplicable(Class<? extends AbstractProject> aClass) {
+            // Indicates that this builder can be used with all kinds of project types
+            return true;
+        }
 
-		@Override
-		public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-			// To persist global configuration information,
-			// set that to properties and call save().
+        /**
+         * This human readable name is used in the configuration screen.
+         *
+         * @return
+         */
+        @Override
+        public String getDisplayName() {
+            return "Execute Cerberus Campaign";
+        }
 
-			urlCerberus = formData.getString("urlCerberus");
-			robot = formData.getString("robot");
-			ssIp = formData.getString("ssIp");
-			ss_p = formData.getString("ss_p");  
-			browser = formData.getString("browser");
-			timeToRefreshCheckCampaignStatus = formData.getLong("timeToRefreshCheckCampaignStatus");
-			timeOutForCampaignExecution = formData.getInt("timeOutForCampaignExecution");
-			// Can also use req.bindJSON(this, formData);
-			//  (easier when there are many fields; need set* methods for this)
-			save();
-			return super.configure(req,formData);
-		}
+        @Override
+        public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
+            // To persist global configuration information,
+            // set that to properties and call save().
 
-		public String getUrlCerberus() {
-			return urlCerberus;
-		}      
-		public void setUrlCerberus(String url) {
-			this.urlCerberus=url;
-		}
+            urlCerberus = formData.getString("urlCerberus");
+            robot = formData.getString("robot");
+            ssIp = formData.getString("ssIp");
+            ss_p = formData.getString("ss_p");
+            browser = formData.getString("browser");
+            timeToRefreshCheckCampaignStatus = formData.getLong("timeToRefreshCheckCampaignStatus");
+            timeOutForCampaignExecution = formData.getInt("timeOutForCampaignExecution");
+            // Can also use req.bindJSON(this, formData);
+            //  (easier when there are many fields; need set* methods for this)
+            save();
+            return super.configure(req, formData);
+        }
 
-		public String getRobot() {
-			return robot;
-		}
+        public String getUrlCerberus() {
+            return urlCerberus;
+        }
 
-		public void setRobot(String robot) {
-			this.robot = robot;
-		}
+        public void setUrlCerberus(String url) {
+            this.urlCerberus = url;
+        }
 
-		public String getSsIp() {
-			return ssIp;
-		}
+        public String getRobot() {
+            return robot;
+        }
 
-		public void setSsIp(String ssIp) {
-			this.ssIp = ssIp;
-		}
+        public void setRobot(String robot) {
+            this.robot = robot;
+        }
 
-		public String getBrowser() {
-			return browser;
-		}
+        public String getSsIp() {
+            return ssIp;
+        }
 
-		public void setBrowser(String browser) {
-			this.browser = browser;
-		}
+        public void setSsIp(String ssIp) {
+            this.ssIp = ssIp;
+        }
 
-		public long getTimeToRefreshCheckCampaignStatus() {
-			return timeToRefreshCheckCampaignStatus;
-		}
+        public String getBrowser() {
+            return browser;
+        }
 
-		public void setTimeToRefreshCheckCampaignStatus(long timeToRefreshCheckCampaignStatus) {
-			this.timeToRefreshCheckCampaignStatus = timeToRefreshCheckCampaignStatus;
-		}
+        public void setBrowser(String browser) {
+            this.browser = browser;
+        }
 
-		public int getTimeOutForCampaignExecution() {
-			return timeOutForCampaignExecution;
-		}
+        public long getTimeToRefreshCheckCampaignStatus() {
+            return timeToRefreshCheckCampaignStatus;
+        }
 
-		public void setTimeOutForCampaignExecution(int timeOutForCampaignExecution) {
-			this.timeOutForCampaignExecution = timeOutForCampaignExecution;
-		}
+        public void setTimeToRefreshCheckCampaignStatus(long timeToRefreshCheckCampaignStatus) {
+            this.timeToRefreshCheckCampaignStatus = timeToRefreshCheckCampaignStatus;
+        }
+
+        public int getTimeOutForCampaignExecution() {
+            return timeOutForCampaignExecution;
+        }
+
+        public void setTimeOutForCampaignExecution(int timeOutForCampaignExecution) {
+            this.timeOutForCampaignExecution = timeOutForCampaignExecution;
+        }
 
         public String getSs_p() {
             return ss_p;
@@ -500,5 +535,5 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
         public void setSs_p(String ss_p) {
             this.ss_p = ss_p;
         }
-	}
+    }
 }

@@ -19,11 +19,13 @@
  */
 package org.cerberus.launchcampaign.executecampaign;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
+import java.nio.charset.Charset;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.StringUtils;
@@ -31,59 +33,73 @@ import org.cerberus.launchcampaign.event.LogEvent;
 
 public class ExecuteCampaign {
 
-	
-	private String urlCerberus;
-	private ExecuteCampaignDto executeCampaignDto;
-	
-	public ExecuteCampaign(String urlCerberus, ExecuteCampaignDto executeCampaignDto) {
-		this.urlCerberus=urlCerberus;
-		this.executeCampaignDto=executeCampaignDto;
-	}
+    private String urlCerberus;
+    private ExecuteCampaignDto executeCampaignDto;
 
-	/**
-	 * launch cerberus campaign (added it into the queue of cerberus)
-	 * @param urlCerberus
-	 * @return false if launch fail,  true if success.
-	 * @throws URISyntaxException
-	 * @throws IOException
-	 */
-	public boolean execute(LogEvent logEvent) throws URISyntaxException, IOException {
+    public ExecuteCampaign(String urlCerberus, ExecuteCampaignDto executeCampaignDto) {
+        this.urlCerberus = urlCerberus;
+        this.executeCampaignDto = executeCampaignDto;
+    }
 
-		String warning = executeCampaignDto.verifyParameterWarning();
-		String error = executeCampaignDto.verifyParameterError();
-		logEvent.log(error, warning, "");
-		
-		if(!StringUtils.isEmpty(error)) {
-			throw new IllegalArgumentException(error);
-		}
-		
-		URL urlExecuteCampaign = executeCampaignDto.buildUrl(urlCerberus);
-		HttpURLConnection  conn = (HttpURLConnection) urlExecuteCampaign.openConnection();
-		conn.setRequestMethod("GET");
-		conn.connect();
-		int code = conn.getResponseCode();
-		logEvent.log("", "", "HTTP response : " + code);
+    /**
+     * launch cerberus campaign (added it into the queue of cerberus)
+     *
+     * @param logEvent
+     * @return false if launch fail, true if success.
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    public boolean execute(LogEvent logEvent) throws URISyntaxException, IOException {
 
-		if(HttpStatus.SC_OK == code) {
-			logEvent.log("", "", "Cerberus response message : " + conn.getResponseMessage());
-			logEvent.log("", "", "Requesting Cerberus with the following parameters : ");
-			for (String param : Arrays.asList(urlExecuteCampaign.getQuery().split("&"))) {
-				logEvent.log("", "", param);
-			}
-			return true;
-		}
+        String warning = executeCampaignDto.verifyParameterWarning();
+        String error = executeCampaignDto.verifyParameterError();
+        logEvent.log(error, warning, "");
 
-		String contains="";
+        if (!StringUtils.isEmpty(error)) {
+            throw new IllegalArgumentException(error);
+        }
 
-		try {
-			contains = conn.getInputStream().toString();
-		} catch (Exception e) {
-			// do nothing
-		}
+        URL urlExecuteCampaign = executeCampaignDto.buildUrl(urlCerberus);
 
-		// log error message
-		logEvent.log("Error message when trying to add a new execution in queue : " + conn.getResponseMessage(), contains, "");
+        logEvent.log("", "", "Trigger Cerberus call : " + urlExecuteCampaign.toString().replace("?" + urlExecuteCampaign.getQuery(), "") + " with query String : " + urlExecuteCampaign.getQuery());
 
-		return false;
-	}
+        HttpURLConnection conn = (HttpURLConnection) urlExecuteCampaign.openConnection();
+        conn.setRequestMethod("GET");
+        conn.connect();
+        int code = conn.getResponseCode();
+        logEvent.log("", "", "HTTP response : " + code + " " + conn.getResponseMessage());
+
+        StringBuilder sb;
+        sb = new StringBuilder();
+        String output;
+        if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
+            try (InputStreamReader s = new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(s)) {
+                    while ((output = br.readLine()) != null) {
+                        sb.append(output);
+                    }
+                }
+            }
+        } else {
+            try (InputStreamReader s = new InputStreamReader(conn.getErrorStream(), Charset.forName("UTF-8"))) {
+                try (BufferedReader br = new BufferedReader(s)) {
+                    while ((output = br.readLine()) != null) {
+                        sb.append(output);
+                    }
+                }
+            }
+        }
+
+        String contains = sb.toString();
+
+        if (HttpStatus.SC_OK == code) {
+            logEvent.log("", "", "Response : " + contains);
+            return true;
+        }
+
+        // log error message
+        logEvent.log("Error message when trying to add a new execution in queue : " + contains, "", "");
+
+        return false;
+    }
 }

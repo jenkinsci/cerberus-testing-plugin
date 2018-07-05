@@ -12,24 +12,30 @@ Cerberus is an open source, user friendly, **automated testing sofware**. See [w
 | cerberus jenkins plugin | cerberus                |
 | ----------------------- | ----------------------- |
 | 1.0.0 -> 1.0.1          | 1.11.0 -> 1.13.2        |
-| 1.0.2 -> 1.03           | 1.14.0 -> 3.4           |
-| 1.0.4 -> today version  | 1.14.0 -> today version |
+| 1.0.2 -> 1.0.4          | 1.14.0 -> 3.2           |
+| 1.0.4 -> 1.0.5          | 3.3 -> today version    |
 
 
 ## Get started
 * Install plugin on Jenkins
-* Set parameters on "Manage Jenkins" screen : 
+* Set parameters on "Manage Jenkins" / "Configure System" screen (under "Execute Cerberus Test" section) : 
+
 ![global_parameter](docs/global_parameter.png "Global parameter")
+
+![global_parameter](docs/global_parameter_adv.png "Global parameter Advanced")
 
 ### On Jenkins
 * To add a campaign Cerberus execution on a job, add a new build step "Execute Cerberus Campaign", and set parameters :
+
 ![build_parameter](docs/build_parameter.png "Build parameter")
+
+![build_parameter](docs/build_parameter_adv.png "Build parameter Advanced")
  
 
 ### On Jenkinsfile
-* Just call `executeCerberusCampaigne` function with parameters :
+* Just call `executeCerberusCampaign` function with parameters :
 	* `campaignName` : Campaign name to execute
-	* `Tag` : Tag to apply
+	* `tag` : Tag to apply
 	* `environment` :  Environment to execute (define into Cerberus)
 	* `browser` : Browser executed by Cerberus to test application. If `browser` is empty, use global settings of Cerberus plugin.
    
@@ -51,11 +57,18 @@ pipeline {
 ## Run plugin on localhost
 For more detail on how develop a plugin for Jenkins, see [here](https://wiki.jenkins-ci.org/display/JENKINS/Plugin+tutorial).
 
-NetBeans 6.7+ users can just hit Debug. For all others, run the following command to launch Jenkins with your plugin:
-Convenient:
+For Netbeans, you can use the preconfigured 'CerberusJenkinsPlugin' under 'Run Maven' menu entry.
+It will trigger the command :
 ```
-mvnDebug hpi:run
+mvn -Djetty.port=8090 hpi:run
 ```
+
+You can also run the following command to launch Jenkins with your plugin in debug mode:
+
+```
+mvnDebug -Djetty.port=8090 hpi:run
+```
+
 
 Unix:
 ```
@@ -70,7 +83,7 @@ Windows:
 > mvn package hpi:run
 ```
 
-If you open http://localhost:8080/jenkins in your browser, you should see the Jenkins page running in Jetty. The MAVEN_OPTS portion launches this whole thing with the debugger port 8000, so you should be able to start a debug session to this port from your IDE.
+If you open http://localhost:8090/jenkins in your browser, you should see the Jenkins page running in Jetty. The MAVEN_OPTS portion launches this whole thing with the debugger port 8000, so you should be able to start a debug session to this port from your IDE.
 
 Once this starts running, keep it running. Jetty will pick up all the changes automatically.
 
@@ -94,13 +107,13 @@ $ mvn -DdownloadSources=true -DdownloadJavadocs=true -DoutputDirectory=target/ec
 
 ### Code
 `ExecuteCerberusCampaign` is the main class call by Jenkins. 
-It use :
-* `ExecuteCampaign` who add Cerberus campaign to Ceberus Queue.
+It uses :
+* `ExecuteCampaign` that trigger a Cerberus campaign (Calling AddToExecutionQueueVxxx) to Cerberus.
 ```java
 executeCampaign.execute();
 ```
 
-* `CheckCampaignStatus` who check all 5 seconds status of campaign execution. When all test executed, job is finished
+* `CheckCampaignStatus` that checks every n seconds (5 as default) the status of campaign execution (Calling ResultCIVxxx). When all test executed, job is finished
 ```java
 checkCampaignStatus.execute(resultDto -> {	  
 	// display advancement
@@ -120,8 +133,8 @@ Modify you maven settings.xml
 <settings>
 ...................
 
-
 <!-- added this -->
+
   <pluginGroups>
     <pluginGroup>org.jenkins-ci.tools</pluginGroup>
   </pluginGroups>
@@ -132,8 +145,12 @@ Modify you maven settings.xml
       <username>jenkinsusername</username>
       <password>jenkinspassword</password>
     </server>
+    <server>
+      <id>github.com</id>
+      <username>githubusername</username>
+      <password>githubpassword</password>
+    </server>
   </servers>
-
   
   <profiles>
     <profile>
@@ -155,6 +172,7 @@ Modify you maven settings.xml
       </pluginRepositories>
     </profile>
   </profiles>
+  
   <mirrors>
     <mirror>
       <id>repo.jenkins-ci.org</id>
@@ -162,6 +180,7 @@ Modify you maven settings.xml
       <mirrorOf>m.g.o-public</mirrorOf>
     </mirror>
   </mirrors>
+  
  <!-- end added this --> 
  
  ..............................
