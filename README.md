@@ -38,6 +38,8 @@ Cerberus is an open source, user friendly, **automated testing sofware**. See [w
 	* `tag` : Tag to apply
 	* `environment` :  Environment to execute (define into Cerberus)
 	* `browser` : Browser executed by Cerberus to test application. If `browser` is empty, use global settings of Cerberus plugin.
+	* `cerberusUrl` : Override default cerberus url
+	* `manualHost` : Override host of the application to test
    
 ```
 pipeline {	

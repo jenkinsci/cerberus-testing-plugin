@@ -16,10 +16,6 @@
 
 	<f:advanced >
 
-		<f:entry title="Environment" field="environment" description="Environment Cerberus will use">
-			<f:textbox />
-		</f:entry>
-
 		<f:entry title="Manual Host" field="manualHost" description="Override host of the application to test">
 			<f:textbox />
 		</f:entry>
@@ -43,6 +39,10 @@
 		</f:entry>
     </f:advanced >
     <f:advanced >
+		<f:entry title="Cerberus Url" field="cerberusUrl" description="cerberus URL (use global settings by default)">
+			<f:textbox />
+		</f:entry>
+
 		<f:entry title="Robot server IP" field="ssIp" description="Robot server IP. If empty, use the global attribute.">
 			<f:textbox />
 		</f:entry>

@@ -87,13 +87,15 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
     private final String priority; // default is 1000
     private final String tag; // default is 'Jenkins--' + current timestamp
     private final String country;
+    private final String cerberusUrl;
+
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
     public ExecuteCerberusCampaign(final String campaignName, final String environment, final String browser,
             final String screenshot, final String verbose, final String pageSource, final String seleniumLog, final String timeOut,
             final String retries, final String priority, final String tag, final String ss_p, final String ssIp, final String robot,
-            final String manualHost, final String manualContextRoot, final String country) {
+            final String manualHost, final String manualContextRoot, final String country,  final String cerberusUrl) {
 
         this.campaignName = campaignName;
         this.environment = environment;
@@ -112,6 +114,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
         this.manualHost = manualHost;
         this.manualContextRoot = manualContextRoot;
         this.country = country;
+        this.cerberusUrl = cerberusUrl;
     }
 
     @Override
@@ -137,6 +140,8 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                 final String expandedSsIp = StringUtils.isEmpty(this.ssIp) ? getDescriptor().getSsIp() : env.expand(this.ssIp);
                 final String expandedSsp = StringUtils.isEmpty(this.ss_p) ? getDescriptor().getSs_p() : env.expand(this.ss_p);
                 final String expandedBrowser = StringUtils.isEmpty(this.browser) ? getDescriptor().getBrowser() : env.expand(this.browser);
+                final String expandedCerberusUrl =  StringUtils.isEmpty(this.cerberusUrl) ? getDescriptor().getUrlCerberus() : env.expand(this.cerberusUrl);
+
 
                 final String expandedEnvironment = env.expand(this.environment);
                 final String expandedCountry = env.expand(this.country);
@@ -151,7 +156,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                         expandedEnvironment, expandedBrowser, expandedCampaignName, screenshot, verbose, pageSource,
                         seleniumLog, timeOut, priority, retries, expandedTag, expandedSsp, manualHost, manualContextRoot, expandedCountries);
 
-                logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + getDescriptor().getUrlCerberus() + " with tag " + executeCampaignDto.getTagCerberus());
+                logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + expandedCerberusUrl + " with tag " + executeCampaignDto.getTagCerberus());
 
                 LogEvent logEvent = new LogEvent() {
                     @Override
@@ -168,13 +173,13 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                     }
                 };
 
-                final ExecuteCampaign executeCampaign = new ExecuteCampaign(getDescriptor().getUrlCerberus(), executeCampaignDto);
+                final ExecuteCampaign executeCampaign = new ExecuteCampaign(expandedCerberusUrl, executeCampaignDto);
                 if (executeCampaign.execute(logEvent)) {
                     // 2 - check if cerberus campaign is finish
-                    String urlCerberusReport = getDescriptor().getUrlCerberus() + "/ReportingExecutionByTag.jsp?Tag=" + executeCampaignDto.getTagCerberus();
+                    String urlCerberusReport = expandedCerberusUrl + "/ReportingExecutionByTag.jsp?Tag=" + executeCampaignDto.getTagCerberus();
                     logger.info("Campaign is launched successfully. You can follow the report here : " + urlCerberusReport);
 
-                    CheckCampaignStatus checkCampaignStatus = new CheckCampaignStatus(executeCampaignDto.getTagCerberus(), getDescriptor().getUrlCerberus(), getDescriptor().timeToRefreshCheckCampaignStatus, getDescriptor().timeOutForCampaignExecution);
+                    CheckCampaignStatus checkCampaignStatus = new CheckCampaignStatus(executeCampaignDto.getTagCerberus(), expandedCerberusUrl, getDescriptor().timeToRefreshCheckCampaignStatus, getDescriptor().timeOutForCampaignExecution);
                     checkCampaignStatus.execute(new CheckCampaignStatus.CheckCampaignEvent() {
 
                         @Override
@@ -293,6 +298,11 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
         return manualContextRoot;
     }
 
+    public String getCerberusUrl() {
+        return cerberusUrl;
+    }
+
+
     // If your plugin doesn't really define any property on Descriptor,
     // you don't have to do this.
     @Override
@@ -308,7 +318,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 	 * See {@code src/main/resources/org/cerberus/jenkinsci/plugins/executecerberustest/ExecuteCerberusCampaign/*.jelly}
 	 * for the actual HTML fragment for the configuration screen.
 	 */
-    @Symbol("executeCerberusCampaign") // name of method to use on pipeline syntax
+    @Symbol("executeCerberusCampaign") // name of method to use on pipeline syntax  /!\ don't delete it, it is very important for pipeline
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
 	public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
