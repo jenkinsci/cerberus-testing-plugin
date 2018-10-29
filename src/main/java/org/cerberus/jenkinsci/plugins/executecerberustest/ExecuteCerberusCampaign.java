@@ -141,7 +141,8 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                 final String expandedSsp = StringUtils.isEmpty(this.ss_p) ? getDescriptor().getSs_p() : env.expand(this.ss_p);
                 final String expandedBrowser = StringUtils.isEmpty(this.browser) ? getDescriptor().getBrowser() : env.expand(this.browser);
                 final String expandedCerberusUrl =  StringUtils.isEmpty(this.cerberusUrl) ? getDescriptor().getUrlCerberus() : env.expand(this.cerberusUrl);
-
+                final String expandedManualHost = StringUtils.isEmpty(this.manualHost) ? getDescriptor().getUrlCerberus() : env.expand(this.manualHost);
+                final String expandedManualContextRoot = StringUtils.isEmpty(this.manualContextRoot) ? getDescriptor().getUrlCerberus() : env.expand(this.manualContextRoot);
 
                 final String expandedEnvironment = env.expand(this.environment);
                 final String expandedCountry = env.expand(this.country);
@@ -154,7 +155,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                 // 1 - Launch cerberus campaign
                 final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(expandedRobot, expandedSsIp,
                         expandedEnvironment, expandedBrowser, expandedCampaignName, screenshot, verbose, pageSource,
-                        seleniumLog, timeOut, priority, retries, expandedTag, expandedSsp, manualHost, manualContextRoot, expandedCountries);
+                        seleniumLog, timeOut, priority, retries, expandedTag, expandedSsp, expandedManualHost, expandedManualContextRoot, expandedCountries);
 
                 logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + expandedCerberusUrl + " with tag " + executeCampaignDto.getTagCerberus());
 
