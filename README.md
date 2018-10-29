@@ -130,6 +130,11 @@ checkCampaignStatus.execute(resultDto -> {
 
 ## Release Cerberus Jenkins Plugin
 
+#### Prerequis
+* Have an account on github, on right to commit on this repo
+* Have an account on `jenkins officiel infra` to upload release (see https://wiki.jenkins.io/display/JENKINS/Hosting+Plugins#HostingPlugins-Requestuploadpermissions)
+
+#### How ?
 Modify you maven settings.xml
 ```
 <settings>
