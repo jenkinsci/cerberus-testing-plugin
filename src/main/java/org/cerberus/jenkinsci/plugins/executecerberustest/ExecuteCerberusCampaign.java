@@ -126,7 +126,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
             EnvVars env = build.getEnvironment(listener);
             final String expandedCampaignName = env.expand(this.campaignName);
             final String expandedTag = env.expand(this.tag);
-
+            
             // first, control parameters
             if (StringUtils.isBlank(Util.fixEmptyAndTrim(expandedCampaignName))) {
                 logger.error("Campaign parameter is empty (Mandatory parameter). Cannot perform build");
@@ -141,9 +141,9 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                 final String expandedSsp = StringUtils.isEmpty(this.ss_p) ? getDescriptor().getSs_p() : env.expand(this.ss_p);
                 final String expandedBrowser = StringUtils.isEmpty(this.browser) ? getDescriptor().getBrowser() : env.expand(this.browser);
                 final String expandedCerberusUrl =  StringUtils.isEmpty(this.cerberusUrl) ? getDescriptor().getUrlCerberus() : env.expand(this.cerberusUrl);
-                final String expandedManualHost = StringUtils.isEmpty(this.manualHost) ? getDescriptor().getUrlCerberus() : env.expand(this.manualHost);
-                final String expandedManualContextRoot = StringUtils.isEmpty(this.manualContextRoot) ? getDescriptor().getUrlCerberus() : env.expand(this.manualContextRoot);
 
+                final String expandedManualHost = env.expand(this.manualHost);
+                final String expandedManualContextRoot = env.expand(this.manualContextRoot);
                 final String expandedEnvironment = env.expand(this.environment);
                 final String expandedCountry = env.expand(this.country);
                 List<String> expandedCountries = new ArrayList<String>();
