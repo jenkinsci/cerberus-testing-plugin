@@ -124,8 +124,8 @@ public class ExecuteCampaignDto {
 
         addIfNotEmpty(b, "campaign", this.selectedCampaign);
         addIfNotEmpty(b, "tag", tagCerberusCampaign);
-        addIfNotEmpty(b, "environment", environment);
-        addIfNotEmpty(b, "robot", robot);
+        addArray(b, "environment", environment);
+        addArray(b, "robot", robot);
         addIfNotEmpty(b, "ss_ip", ss_ip);
         addIfNotEmpty(b, "ss_p", ss_p);
         addIfNotEmpty(b, "browser", browser);
@@ -152,7 +152,15 @@ public class ExecuteCampaignDto {
         return new URL(b.build().toString());
     }
 
-    public void addIfNotEmpty(URIBuilder b, String key, String value) {
+    private void addArray(URIBuilder b, String key, String array) {
+        // manage several robot
+        String[] elmts = array.split(",");
+        for (String elmt : elmts) {
+            addIfNotEmpty(b, key, elmt);
+        }
+    }
+
+    private void addIfNotEmpty(URIBuilder b, String key, String value) {
         if (!StringUtils.isEmpty(value)) {
             b.addParameter(key, value);
         }

@@ -21,6 +21,7 @@ package org.cerberus.launchcampaign.executecampaign;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -72,20 +73,18 @@ public class ExecuteCampaign {
         StringBuilder sb;
         sb = new StringBuilder();
         String output;
+
+        InputStream inputStream;
         if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
-            try (InputStreamReader s = new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8"))) {
-                try (BufferedReader br = new BufferedReader(s)) {
-                    while ((output = br.readLine()) != null) {
-                        sb.append(output);
-                    }
-                }
-            }
+            inputStream = conn.getInputStream();
         } else {
-            try (InputStreamReader s = new InputStreamReader(conn.getErrorStream(), Charset.forName("UTF-8"))) {
-                try (BufferedReader br = new BufferedReader(s)) {
-                    while ((output = br.readLine()) != null) {
-                        sb.append(output);
-                    }
+            inputStream = conn.getErrorStream();
+        }
+
+        try (InputStreamReader s = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(s)) {
+                while ((output = br.readLine()) != null) {
+                    sb.append(output);
                 }
             }
         }

@@ -39,6 +39,10 @@
 		</f:entry>
     </f:advanced >
     <f:advanced >
+		<f:entry title="Timeout for campaign execution (seconds)" field="timeOutForCampaignExecution"
+				 description="After this time if campaign is not finished, job will fail. Default to 14400 seconds (ie : 4h). ">
+			<f:textbox />
+		</f:entry>
 		<f:entry title="Cerberus Url" field="cerberusUrl" description="cerberus URL (use global settings by default)">
 			<f:textbox />
 		</f:entry>
