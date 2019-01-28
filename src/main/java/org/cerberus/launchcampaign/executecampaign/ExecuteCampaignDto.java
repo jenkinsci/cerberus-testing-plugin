@@ -154,9 +154,11 @@ public class ExecuteCampaignDto {
 
     private void addArray(URIBuilder b, String key, String array) {
         // manage several robot
-        String[] elmts = array.split(",");
-        for (String elmt : elmts) {
-            addIfNotEmpty(b, key, elmt);
+        if (!StringUtils.isEmpty(array)) {
+            String[] elmts = array.split(",");
+            for (String elmt : elmts) {
+                addIfNotEmpty(b, key, elmt);
+            }
         }
     }
 
