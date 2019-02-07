@@ -19,6 +19,7 @@
  */
 package org.cerberus.launchcampaign.checkcampaign;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.concurrent.Executors;
@@ -127,6 +128,9 @@ public class CheckCampaignStatus {
                 } catch (SocketException e) {
                     // do nothing during network problem. Wait the timeout to shutdown, and notify the error to logEvent
                     logEvent.log("", e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e), "");
+                } catch(IOException e) {
+                    // do nothing if it an network exception, just notify it
+                    logEvent.log("",e.getMessage(),"");
                 } catch (Exception e) {
                     exceptionOnThread.set(e);
                     sch.shutdown();
