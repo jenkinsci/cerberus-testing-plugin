@@ -42,6 +42,7 @@ public class ExecuteCampaignDto {
     private final List<String> countries;
     private final String manualHost;
     private final String manualContextRoot;
+    private final String executor;
 
     private final String screenshot;
     private final String verbose;
@@ -52,7 +53,8 @@ public class ExecuteCampaignDto {
     private final String priority;
 
     public ExecuteCampaignDto(final String robot, final String ss_ip, final String environment, final String browser, final String selectedCampaign, final String screenshot, final String verbose,
-            final String pageSource, final String seleniumLog, final String timeOut, final String priority, final String retries, final String tag, final String ss_p, final String manualHost, final String manualContextRoot, List<String> countries) {
+            final String pageSource, final String seleniumLog, final String timeOut, final String priority, final String retries, final String tag, final String ss_p, final String manualHost,
+            final String manualContextRoot, List<String> countries, final String executor) {
         super();
         this.robot = robot;
         this.ss_ip = ss_ip;
@@ -76,6 +78,7 @@ public class ExecuteCampaignDto {
         SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
         this.tagCerberusCampaign = tag.replace("$[current_timestamp]", dt.format(time));
+        this.executor = executor.replace("$[current_timestamp]", dt.format(time));
     }
 
     public String verifyParameterWarning() {
@@ -137,6 +140,7 @@ public class ExecuteCampaignDto {
         addIfNotEmpty(b, "timeout", this.timeOut + "");
         addIfNotEmpty(b, "retries", this.retries + "");
         addIfNotEmpty(b, "priority", this.priority + "");
+        addIfNotEmpty(b, "executor", this.executor + "");
         b.addParameter("manualexecution", "N");
 
         for (String country : countries) {

@@ -50,7 +50,7 @@ public class ExecuteCampaignTest {
 
 	@Before
 	public void before() {
-		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", new ArrayList<String>());
+		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", new ArrayList<String>(), "");
 
 		urlAddCampaign = "http://localhost:" + mockServerRule.getPort() + "/Cerberus/"+Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE;
 		executeCampaign = new ExecuteCampaign(urlAddCampaign, executeCampaignDto);

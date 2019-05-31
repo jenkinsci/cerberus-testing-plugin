@@ -6,11 +6,12 @@
 
 	<!-- Creates a text field that shows the value of the "name" property. When 
 		submitted, it will be passed to the corresponding constructor parameter. -->
-	<f:entry title="Campaign to launch" field="campaignName" description="Campaign Cerberus will launch">
+
+	<f:entry title="Campaign to launch" field="campaignName" description="Name of the Campaign to launch">
 		<f:textbox />
 	</f:entry>
 	
-	<f:entry title="Cerberus Tag" field="tag" description="Tag for each execution of this campaign. $[current_timestamp] can be used." >
+	<f:entry title="Cerberus Tag" field="tag" description="Tag name of the campaign triggered. $[current_timestamp] can be used." >
 		<f:textbox default="JenkinsJob-$[current_timestamp]"/>
 	</f:entry>
 
@@ -24,25 +25,28 @@
 			<f:textbox />
 		</f:entry>
 
-    </f:advanced >
-    <f:advanced >
-        <f:entry title="Country" field="country" description="List of countries to execute campaign on (comma separated if several countries, for example : 'FR' or 'FR,UK,BE')" >
-            <f:textbox />
-        </f:entry>
+        </f:advanced >
 
-		<f:entry title="Environment" field="environment" description="Environment Cerberus must use">
+        <f:advanced >
+                <f:entry title="Country" field="country" description="List of countries that Cerberus will use to execute the campaign (comma separated if several countries, for example : 'FR' or 'FR,UK,BE')" >
+                    <f:textbox />
+                </f:entry>
+
+		<f:entry title="Environment" field="environment" description="Environment that Cerberus will use to execute the campaign">
 			<f:textbox />
 		</f:entry>
 
-		<f:entry title="Robot" field="robot" description="Robot (use global settings by default)">
+		<f:entry title="Robot" field="robot" description="Robot that Cerberus will use to execute the campaign">
 			<f:textbox />
 		</f:entry>
-    </f:advanced >
-    <f:advanced >
+        </f:advanced >
+
+        <f:advanced >
 		<f:entry title="Timeout for campaign execution (seconds)" field="timeOutForCampaignExecution"
 				 description="After this time if campaign is not finished, job will fail. Default to 14400 seconds (ie : 4h). ">
 			<f:textbox />
 		</f:entry>
+
 		<f:entry title="Cerberus Url" field="cerberusUrl" description="cerberus URL (use global settings by default)">
 			<f:textbox />
 		</f:entry>
@@ -51,9 +55,9 @@
 			<f:textbox />
 		</f:entry>
 
-        <f:entry title="Robot server port" field="ss_p" description="Robot server port. If empty, use the global attribute.">
-            <f:textbox />
-        </f:entry>
+                <f:entry title="Robot server port" field="ss_p" description="Robot server port. If empty, use the global attribute.">
+                        <f:textbox />
+                </f:entry>
 
 		<f:entry title="Browser" field="browser" description="Browser than Cerberus will use to execute test. If empty, use the global settings.">
 			<f:textbox />
@@ -64,7 +68,7 @@
 			<f:textbox />
 		</f:entry>
 
-		<f:entry title="Screenshot" field="screenshot" description="Enable screenshot on Cerberus ( 0 - No screenshot / 1 - Screenshot on error / 2 - Screenshot on every action)">
+		<f:entry title="Screenshot" field="screenshot" description="Enable screenshot on Cerberus ( 0 - No screenshot / 1 - Screenshot on error / 2 - Systematic Screenshot / 3 - Screenshot and Video on error / 4 - Systematic Screenshot and Video )">
 			<f:textbox />
 		</f:entry>		
 
@@ -85,6 +89,10 @@
 		</f:entry>
 
 		<f:entry title="Priority" field="priority" description="Define an order of priority in Cerberus to prioritize the campaign execution order (the lowest number, the highest priority)" >
+			<f:textbox />
+		</f:entry>
+
+		<f:entry title="Executor" field="executor" description="Name of the executor" >
 			<f:textbox />
 		</f:entry>
 
