@@ -39,50 +39,48 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @RunWith(PowerMockRunner.class)
 public class ExecuteCampaignTest {
 
-	private String urlAddCampaign;
-	
-	@Rule
-	public MockServerRule mockServerRule = new MockServerRule(this);
-	private MockServerClient mockServerClient;
-	private LogEvent logEvent;
-	
-	private ExecuteCampaign executeCampaign;
+    private String urlAddCampaign;
 
-	@Before
-	public void before() {
-		ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", new ArrayList<String>(), "");
+    @Rule
+    public MockServerRule mockServerRule = new MockServerRule(this);
+    private MockServerClient mockServerClient;
+    private LogEvent logEvent;
 
-		urlAddCampaign = "http://localhost:" + mockServerRule.getPort() + "/Cerberus/"+Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE;
-		executeCampaign = new ExecuteCampaign(urlAddCampaign, executeCampaignDto);
-		
-		logEvent = new LogEvent() {			
-			@Override
-			public void log(String error, String warning, String info) {
-			}
-		};
-	}
-	
-	
-	
-	@Test
-	public void executeSucess() throws Exception {
-		mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(200));
-		
-		// execute
-		boolean success = executeCampaign.execute(logEvent);
+    private ExecuteCampaign executeCampaign;
 
-		// assert
-		assertThat(success, is(true));
-	}
-	
-	@Test
-	public void executeFail() throws Exception {
-		mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(404).withBody("404 Error."));
-		
-		// execute
-		boolean success = executeCampaign.execute(logEvent);
+    @Before
+    public void before() {
+        ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
-		// assert
-		assertThat(success, is(false));
-	}
+        urlAddCampaign = "http://localhost:" + mockServerRule.getPort() + "/Cerberus/" + Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE;
+        executeCampaign = new ExecuteCampaign(urlAddCampaign, executeCampaignDto);
+
+        logEvent = new LogEvent() {
+            @Override
+            public void log(String error, String warning, String info) {
+            }
+        };
+    }
+
+    @Test
+    public void executeSucess() throws Exception {
+        mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(200));
+
+        // execute
+        boolean success = executeCampaign.execute(logEvent);
+
+        // assert
+        assertThat(success, is(true));
+    }
+
+    @Test
+    public void executeFail() throws Exception {
+        mockServerClient.when(request().withMethod("GET")).respond(response().withStatusCode(404).withBody("404 Error."));
+
+        // execute
+        boolean success = executeCampaign.execute(logEvent);
+
+        // assert
+        assertThat(success, is(false));
+    }
 }

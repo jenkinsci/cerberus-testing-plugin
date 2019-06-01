@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -39,7 +38,7 @@ public class ExecuteCampaignDto {
     private final String selectedCampaign;
     private final String tagCerberusCampaign;
     private final String ss_p;
-    private final List<String> countries;
+    private final String country;
     private final String manualHost;
     private final String manualContextRoot;
     private final String executor;
@@ -54,7 +53,7 @@ public class ExecuteCampaignDto {
 
     public ExecuteCampaignDto(final String robot, final String ss_ip, final String environment, final String browser, final String selectedCampaign, final String screenshot, final String verbose,
             final String pageSource, final String seleniumLog, final String timeOut, final String priority, final String retries, final String tag, final String ss_p, final String manualHost,
-            final String manualContextRoot, List<String> countries, final String executor) {
+            final String manualContextRoot, String country, final String executor) {
         super();
         this.robot = robot;
         this.ss_ip = ss_ip;
@@ -71,8 +70,7 @@ public class ExecuteCampaignDto {
         this.ss_p = ss_p;
         this.manualHost = manualHost;
         this.manualContextRoot = manualContextRoot;
-
-        this.countries = countries;
+        this.country = country;
 
         Date time = new Date();
         SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddHHmmssSSS");
@@ -128,6 +126,7 @@ public class ExecuteCampaignDto {
         addIfNotEmpty(b, "campaign", this.selectedCampaign);
         addIfNotEmpty(b, "tag", tagCerberusCampaign);
         addArray(b, "environment", environment);
+        addArray(b, "country", country);
         addArray(b, "robot", robot);
         addIfNotEmpty(b, "ss_ip", ss_ip);
         addIfNotEmpty(b, "ss_p", ss_p);
@@ -136,16 +135,11 @@ public class ExecuteCampaignDto {
         addIfNotEmpty(b, "verbose", this.verbose + "");
         addIfNotEmpty(b, "pagesource", this.pageSource + "");
         addIfNotEmpty(b, "seleniumlog", this.seleniumLog + "");
-
         addIfNotEmpty(b, "timeout", this.timeOut + "");
         addIfNotEmpty(b, "retries", this.retries + "");
         addIfNotEmpty(b, "priority", this.priority + "");
         addIfNotEmpty(b, "executor", this.executor + "");
         b.addParameter("manualexecution", "N");
-
-        for (String country : countries) {
-            b.addParameter("country", country);
-        }
 
         if (!StringUtils.isEmpty(manualHost)) {
             b.addParameter("manualurl", "2");

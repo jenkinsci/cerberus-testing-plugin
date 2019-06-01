@@ -11,7 +11,7 @@
 		<f:textbox />
 	</f:entry>
 	
-	<f:entry title="Cerberus Tag" field="tag" description="Tag name of the campaign triggered. $[current_timestamp] can be used." >
+	<f:entry title="Cerberus Tag" field="tag" description="Tag name of the campaign triggered. $[current_timestamp] can be used" >
 		<f:textbox default="JenkinsJob-$[current_timestamp]"/>
 	</f:entry>
 
@@ -21,7 +21,7 @@
 			<f:textbox />
 		</f:entry>
 
-		<f:entry title="Manual ContextRoot" field="manualContextRoot" description="Override context Root of the application to test.">
+		<f:entry title="Manual ContextRoot" field="manualContextRoot" description="Override context Root of the application to test">
 			<f:textbox />
 		</f:entry>
 
@@ -32,51 +32,51 @@
                     <f:textbox />
                 </f:entry>
 
-		<f:entry title="Environment" field="environment" description="Environment that Cerberus will use to execute the campaign">
+		<f:entry title="Environment" field="environment" description="List of environments that Cerberus will use to execute the campaign (comma separated if several environments, for example : 'QA' or 'QA1,QA2,QA3')">
 			<f:textbox />
 		</f:entry>
 
-		<f:entry title="Robot" field="robot" description="Robot that Cerberus will use to execute the campaign">
+		<f:entry title="Robot" field="robot" description="List of robots that Cerberus will use to execute the campaign (comma separated if several robots, for example : 'Robot1' or 'Robot1,Robot2,Robot3')  (use global settings by default)">
 			<f:textbox />
 		</f:entry>
         </f:advanced >
 
         <f:advanced >
 		<f:entry title="Timeout for campaign execution (seconds)" field="timeOutForCampaignExecution"
-				 description="After this time if campaign is not finished, job will fail. Default to 14400 seconds (ie : 4h). ">
+				 description="After this time if campaign is not finished, job will fail. Default to 14400 seconds (ie : 4h)  (use global settings by default)">
 			<f:textbox />
 		</f:entry>
 
-		<f:entry title="Cerberus Url" field="cerberusUrl" description="cerberus URL (use global settings by default)">
+		<f:entry title="Cerberus URL" field="cerberusUrl" description="Cerberus URL (use global settings by default)">
 			<f:textbox />
 		</f:entry>
 
-		<f:entry title="Robot server IP" field="ssIp" description="Robot server IP. If empty, use the global attribute.">
+		<f:entry title="Robot server IP" field="ssIp" description="Robot server IP (use global settings by default)">
 			<f:textbox />
 		</f:entry>
 
-                <f:entry title="Robot server port" field="ss_p" description="Robot server port. If empty, use the global attribute.">
+                <f:entry title="Robot server port" field="ss_p" description="Robot server port (use global settings by default)">
                         <f:textbox />
                 </f:entry>
 
-		<f:entry title="Browser" field="browser" description="Browser than Cerberus will use to execute test. If empty, use the global settings.">
+		<f:entry title="Browser" field="browser" description="Browser than Cerberus will use to execute test (use global settings by default)">
 			<f:textbox />
 		</f:entry>
 
 
-		<f:entry title="Verbose" field="verbose" description="Verbose mode on Cerberus ( 0 - Minimum log / 1 - Standard log / 2 - Maximum log)" >
+		<f:entry title="Verbose" field="verbose" description="Verbose mode on Cerberus (0 - Minimum log / 1 - Standard log / 2 - Maximum log)" >
 			<f:textbox />
 		</f:entry>
 
-		<f:entry title="Screenshot" field="screenshot" description="Enable screenshot on Cerberus ( 0 - No screenshot / 1 - Screenshot on error / 2 - Systematic Screenshot / 3 - Screenshot and Video on error / 4 - Systematic Screenshot and Video )">
+		<f:entry title="Screenshot" field="screenshot" description="Enable screenshot on Cerberus (0 - No screenshot / 1 - Screenshot on error / 2 - Systematic Screenshot / 3 - Screenshot and Video on error / 4 - Systematic Screenshot and Video)">
 			<f:textbox />
 		</f:entry>		
 
-		<f:entry title="Page source" field="pageSource" description="Page source ( 0 - Never get Page Source / 1 - Get Page Source on error only / 2 - Get Page source after each action)" >
+		<f:entry title="Page source" field="pageSource" description="Page source (0 - Never get Page Source / 1 - Get Page Source on error only / 2 - Get Page source after each action)" >
 			<f:textbox />
 		</f:entry>
 		
-		<f:entry title="Robot Log" field="seleniumLog" description="Active selenium log on Cerberus ( 0 - Never record Robot Log / 1 - Record Robot Log on error only / 2 - Record Robot Log on testcase)" >
+		<f:entry title="Robot Log" field="seleniumLog" description="Active selenium log on Cerberus (0 - Never record Robot Log / 1 - Record Robot Log on error only / 2 - Record Robot Log on testcase)" >
 			<f:textbox />
 		</f:entry>
 		
@@ -92,7 +92,7 @@
 			<f:textbox />
 		</f:entry>
 
-		<f:entry title="Executor" field="executor" description="Name of the executor" >
+		<f:entry title="Executor" field="executor" description="Name of the executor  (use global settings by default)" >
 			<f:textbox />
 		</f:entry>
 

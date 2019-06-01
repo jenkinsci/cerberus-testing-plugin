@@ -16,31 +16,31 @@
 		</f:entry>
 		
 		<f:entry title="Time to refresh the campaign status (seconds)" field="timeToRefreshCheckCampaignStatus"
-			description="Period in second when Jenkins will call Cerberus to refresh campaign execution status. Default to 5 seconds.">
+			description="Period in second when Jenkins will call Cerberus to refresh campaign execution status. Default to 5 seconds">
 			<f:textbox default="5" />
 		</f:entry>
 
 		<f:entry title="Timeout for campaign execution (seconds)" field="timeOutForCampaignExecution"
-			description="After this time if campaign is not finished, job will fail. Default to 14400 seconds (ie : 4h).">
+			description="After this time if campaign is not finished, job will fail. Default to 14400 seconds (ie : 4h)">
 			<f:textbox default="14400"/>
 		</f:entry>
 		
 		<f:entry title="Executor of the campaign" field="executor"
-			description="Executor that will be used for the campaign.">
+			description="Executor that will be used for the campaign">
 			<f:textbox />
 		</f:entry>
 		
 		<f:advanced>
-                        <f:entry title="Default Robot" field="robot" description="Robot, leave empty if you want to use campaigns value.">
+                        <f:entry title="Default Robot" field="robot" description="Robot, (leave empty if you want to use campaign value)">
                                 <f:textbox />
         		</f:entry>
-			<f:entry title="Default Robot server IP" field="ssIp" description="Default Robot serveur IP.">
+			<f:entry title="Default Robot server IP" field="ssIp" description="Default Robot serveur IP">
 				<f:textbox />
 			</f:entry>
-			<f:entry title="Default Robot server port" field="ss_p" description="Default Robot serveur port.">
+			<f:entry title="Default Robot server port" field="ss_p" description="Default Robot serveur port">
 				<f:textbox />
 			</f:entry>
-			<f:entry title="Default Browser" field="browser" description="Default Browser (firefox, chrome,...).">
+			<f:entry title="Default Browser" field="browser" description="Default Browser (firefox, chrome,...)">
                                 <f:textbox />
 			</f:entry>
 		</f:advanced>

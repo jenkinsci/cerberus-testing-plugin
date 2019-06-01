@@ -150,16 +150,11 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                 final String expandedManualContextRoot = env.expand(this.manualContextRoot);
                 final String expandedEnvironment = env.expand(this.environment);
                 final String expandedCountry = env.expand(this.country);
-                List<String> expandedCountries = new ArrayList<String>();
-
-                if (StringUtils.isNotBlank(Util.fixEmptyAndTrim(expandedCountry))) {
-                    expandedCountries = Arrays.asList(expandedCountry.split(","));
-                }
 
                 // 1 - Launch cerberus campaign
                 final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(expandedRobot, expandedSsIp,
                         expandedEnvironment, expandedBrowser, expandedCampaignName, screenshot, verbose, pageSource,
-                        seleniumLog, timeOut, priority, retries, expandedTag, expandedSsp, expandedManualHost, expandedManualContextRoot, expandedCountries, expandedExecutor);
+                        seleniumLog, timeOut, priority, retries, expandedTag, expandedSsp, expandedManualHost, expandedManualContextRoot, expandedCountry, expandedExecutor);
 
                 logger.info("Launch campaign " + executeCampaignDto.getSelectedCampaign() + " on " + expandedCerberusUrl + " with tag " + executeCampaignDto.getTagCerberus());
 
@@ -235,6 +230,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
             build.setResult(Result.FAILURE);
         } finally {
             if (Result.FAILURE.equals(build.getResult()) || Result.UNSTABLE.equals(build.getResult())) {
+                logger.error("EXIT 1");
                 System.exit(1);
             }
         }
