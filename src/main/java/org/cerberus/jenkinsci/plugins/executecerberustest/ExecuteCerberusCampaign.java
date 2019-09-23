@@ -220,7 +220,6 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                     logger.error("Please Check Cerberus log or Cerberus queue to resolve problem");
                     logger.error("UNSTABLE");
                     build.setResult(Result.FAILURE);
-
                 }
             }
         } catch (Exception e) {
@@ -228,11 +227,6 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
             logger.error("Please Check Cerberus log or Cerberus queue to resolve problem");
             logger.error("UNSTABLE");
             build.setResult(Result.FAILURE);
-        } finally {
-            if (Result.FAILURE.equals(build.getResult()) || Result.UNSTABLE.equals(build.getResult())) {
-                logger.error("EXIT 1");
-                System.exit(1);
-            }
         }
     }
 
