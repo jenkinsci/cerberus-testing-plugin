@@ -93,7 +93,7 @@
 		</f:entry>
 
 		<f:entry title="Executor" field="executor" description="Name of the executor  (use global settings by default)" >
-			<f:textbox />
+			<f:textbox default="Jenkins"/>
 		</f:entry>
 
 	</f:advanced>

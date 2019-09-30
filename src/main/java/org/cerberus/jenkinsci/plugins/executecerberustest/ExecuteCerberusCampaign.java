@@ -139,7 +139,8 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                 build.setResult(Result.FAILURE);
             } else {
                 // overide attribute if local settings is empty
-                final String expandedExecutor = StringUtils.isEmpty(this.executor) ? getDescriptor().getExecutor() : env.expand(this.executor);
+                String expandedExecutor = StringUtils.isEmpty(this.executor) ? getDescriptor().getExecutor() : env.expand(this.executor);
+                expandedExecutor = StringUtils.isEmpty(expandedExecutor) ? "Jenkins" : expandedExecutor;
                 final String expandedRobot = StringUtils.isEmpty(this.robot) ? getDescriptor().getRobot() : env.expand(this.robot);
                 final String expandedSsIp = StringUtils.isEmpty(this.ssIp) ? getDescriptor().getSsIp() : env.expand(this.ssIp);
                 final String expandedSsp = StringUtils.isEmpty(this.ss_p) ? getDescriptor().getSs_p() : env.expand(this.ss_p);
