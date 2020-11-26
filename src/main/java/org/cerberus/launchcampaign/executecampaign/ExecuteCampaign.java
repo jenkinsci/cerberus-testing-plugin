@@ -36,10 +36,12 @@ public class ExecuteCampaign {
 
     private String urlCerberus;
     private ExecuteCampaignDto executeCampaignDto;
+    private String apikey;
 
-    public ExecuteCampaign(String urlCerberus, ExecuteCampaignDto executeCampaignDto) {
+    public ExecuteCampaign(String urlCerberus, ExecuteCampaignDto executeCampaignDto, String apikey) {
         this.urlCerberus = urlCerberus;
         this.executeCampaignDto = executeCampaignDto;
+        this.apikey = apikey;
     }
 
     /**
@@ -65,10 +67,11 @@ public class ExecuteCampaign {
         logEvent.log("", "", "Trigger Cerberus call : " + urlExecuteCampaign.toString().replace("?" + urlExecuteCampaign.getQuery(), "") + " with query String : " + urlExecuteCampaign.getQuery());
 
         HttpURLConnection conn = (HttpURLConnection) urlExecuteCampaign.openConnection();
+        conn.setRequestProperty("apikey", apikey);
         conn.setRequestMethod("GET");
         conn.connect();
         int code = conn.getResponseCode();
-        logEvent.log("", "", "HTTP response : " + code + " " + conn.getResponseMessage());
+        logEvent.log("", "", "HTTP response : " + code);
 
         StringBuilder sb;
         sb = new StringBuilder();

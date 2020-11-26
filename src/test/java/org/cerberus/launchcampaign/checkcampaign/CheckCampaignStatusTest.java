@@ -58,7 +58,7 @@ public class CheckCampaignStatusTest {
 	@Before
 	public void before() {
 		urlCheckCampaign = "/Cerberus" ;
-		checkCampaignStatus = new CheckCampaignStatus("tag123", "http://localhost:" + mockServerRule.getPort() + urlCheckCampaign);
+		checkCampaignStatus = new CheckCampaignStatus("tag123", "http://localhost:" + mockServerRule.getPort() + urlCheckCampaign, "");
 		
 		logEvent = new LogEvent() {			
 			@Override

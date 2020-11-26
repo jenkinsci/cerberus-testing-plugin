@@ -151,6 +151,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                 final String expandedManualContextRoot = env.expand(this.manualContextRoot);
                 final String expandedEnvironment = env.expand(this.environment);
                 final String expandedCountry = env.expand(this.country);
+                final String expandedAPIKey = getDescriptor().getApikey();
 
                 // 1 - Launch cerberus campaign
                 final ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto(expandedRobot, expandedSsIp,
@@ -174,13 +175,13 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
                     }
                 };
 
-                final ExecuteCampaign executeCampaign = new ExecuteCampaign(expandedCerberusUrl, executeCampaignDto);
+                final ExecuteCampaign executeCampaign = new ExecuteCampaign(expandedCerberusUrl, executeCampaignDto, expandedAPIKey);
                 if (executeCampaign.execute(logEvent)) {
                     // 2 - check if cerberus campaign is finish
                     String urlCerberusReport = expandedCerberusUrl + "/ReportingExecutionByTag.jsp?Tag=" + executeCampaignDto.getTagCerberus();
                     logger.info("Campaign is launched successfully. You can follow the report here : " + urlCerberusReport);
 
-                    CheckCampaignStatus checkCampaignStatus = new CheckCampaignStatus(executeCampaignDto.getTagCerberus(), expandedCerberusUrl, getDescriptor().timeToRefreshCheckCampaignStatus, expandedTimeOutForCampaignExecution);
+                    CheckCampaignStatus checkCampaignStatus = new CheckCampaignStatus(executeCampaignDto.getTagCerberus(), expandedCerberusUrl, expandedAPIKey, getDescriptor().timeToRefreshCheckCampaignStatus, expandedTimeOutForCampaignExecution);
                     checkCampaignStatus.execute(new CheckCampaignStatus.CheckCampaignEvent() {
 
                         @Override
@@ -462,6 +463,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
         private String executor;
         private long timeToRefreshCheckCampaignStatus;
         private int timeOutForCampaignExecution;
+        private String apikey;
 
         /**
          * In order to load the persisted global configuration, you have to call
@@ -508,6 +510,7 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
             executor = formData.getString("executor");
             timeToRefreshCheckCampaignStatus = formData.getLong("timeToRefreshCheckCampaignStatus");
             timeOutForCampaignExecution = formData.getInt("timeOutForCampaignExecution");
+            apikey = formData.getString("apikey");
             // Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this)
             save();
@@ -556,6 +559,14 @@ public class ExecuteCerberusCampaign extends Builder implements SimpleBuildStep 
 
         public void setTimeToRefreshCheckCampaignStatus(long timeToRefreshCheckCampaignStatus) {
             this.timeToRefreshCheckCampaignStatus = timeToRefreshCheckCampaignStatus;
+        }
+
+        public String getApikey() {
+            return apikey;
+        }
+
+        public void setApikey(String apikey) {
+            this.apikey = apikey;
         }
 
         public int getTimeOutForCampaignExecution() {

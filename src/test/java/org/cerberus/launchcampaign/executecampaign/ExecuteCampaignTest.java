@@ -53,7 +53,7 @@ public class ExecuteCampaignTest {
         ExecuteCampaignDto executeCampaignDto = new ExecuteCampaignDto("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
         urlAddCampaign = "http://localhost:" + mockServerRule.getPort() + "/Cerberus/" + Constantes.URL_ADD_CAMPAIGN_TO_EXECUTION_QUEUE;
-        executeCampaign = new ExecuteCampaign(urlAddCampaign, executeCampaignDto);
+        executeCampaign = new ExecuteCampaign(urlAddCampaign, executeCampaignDto,"");
 
         logEvent = new LogEvent() {
             @Override

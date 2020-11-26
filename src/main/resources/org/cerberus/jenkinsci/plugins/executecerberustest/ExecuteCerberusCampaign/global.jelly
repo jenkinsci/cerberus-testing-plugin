@@ -31,6 +31,9 @@
 		</f:entry>
 		
 		<f:advanced>
+                        <f:entry title="API Key" field="apikey" description="API Key value to be used when calling Cerberus API.">
+                                <f:textbox />
+        		</f:entry>
                         <f:entry title="Default Robot" field="robot" description="Robot, (leave empty if you want to use campaign value)">
                                 <f:textbox />
         		</f:entry>

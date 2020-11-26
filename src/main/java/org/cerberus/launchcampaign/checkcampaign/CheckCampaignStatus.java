@@ -32,6 +32,11 @@ import org.cerberus.launchcampaign.Constantes;
 import org.cerberus.launchcampaign.event.LogEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.nio.charset.Charset;
 
 /**
  * Check all 5 seconds the status of campaign's execution. Use example :
@@ -51,6 +56,7 @@ public class CheckCampaignStatus {
 
     private String tagCerberus;
     private String urlCerberus;
+    private String apikey;
     private long timeToRefreshCampaignStatus;
     private int timeoutForCampaignExecution;
 
@@ -59,24 +65,27 @@ public class CheckCampaignStatus {
      * @param tagCerberus the tag use when campaign was added to cerberus queue
      * @param urlCerberus url of cerberus (ex : http://cerberus/Cerberus)
      */
-    public CheckCampaignStatus(final String tagCerberus, final String urlCerberus) {
-        this(tagCerberus, urlCerberus, Constantes.TIME_TO_REFRESH_CAMPAIGN_STATUS_DEFAULT, Constantes.TIMEOUT_FOR_CAMPAIGN_EXECUTION);
+    public CheckCampaignStatus(final String tagCerberus, final String urlCerberus, final String apikey) {
+        this(tagCerberus, urlCerberus, apikey, Constantes.TIME_TO_REFRESH_CAMPAIGN_STATUS_DEFAULT, Constantes.TIMEOUT_FOR_CAMPAIGN_EXECUTION);
     }
 
     /**
      *
      * @param tagCerberus the tag use when campaign was added to cerberus queue
      * @param urlCerberus url of cerberus (ex : http://cerberus/Cerberus)
+     * @param apikey apikey value that will be added inside header in order to
+     * authenticate the calls
      * @param timeToRefreshCampaignStatus Time to refresh the campaign status
      * (seconds). 5s by default
      * @param timeoutForCampaignExecution Timeout for campaign execution
      * (seconds). After this time, if campaign is not finished, job failed
      */
-    public CheckCampaignStatus(final String tagCerberus, final String urlCerberus, final long timeToRefreshCampaignStatus, final int timeoutForCampaignExecution) {
+    public CheckCampaignStatus(final String tagCerberus, final String urlCerberus, final String apikey, final long timeToRefreshCampaignStatus, final int timeoutForCampaignExecution) {
         this.tagCerberus = tagCerberus;
         this.urlCerberus = urlCerberus;
         this.timeToRefreshCampaignStatus = timeToRefreshCampaignStatus;
         this.timeoutForCampaignExecution = timeoutForCampaignExecution;
+        this.apikey = apikey;
     }
 
     /**
@@ -114,7 +123,35 @@ public class CheckCampaignStatus {
                 try {
 
                     URL resultURL = new URL(urlCerberus + "/" + Constantes.URL_RESULT_CI + "?tag=" + tagCerberus);
-                    ResultCIDto resultDto = new ObjectMapper().readValue(resultURL, ResultCIDto.class);
+
+                    HttpURLConnection conn = (HttpURLConnection) resultURL.openConnection();
+                    conn.setRequestProperty("apikey", apikey);
+                    conn.setRequestMethod("GET");
+                    conn.connect();
+                    int code = conn.getResponseCode();
+
+                    StringBuilder sb;
+                    sb = new StringBuilder();
+                    String output;
+
+                    InputStream inputStream;
+                    if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
+                        inputStream = conn.getInputStream();
+                    } else {
+                        inputStream = conn.getErrorStream();
+                    }
+
+                    try (InputStreamReader s = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {
+                        try (BufferedReader br = new BufferedReader(s)) {
+                            while ((output = br.readLine()) != null) {
+                                sb.append(output);
+                            }
+                        }
+                    }
+
+                    String contains = sb.toString();
+
+                    ResultCIDto resultDto = new ObjectMapper().readValue(contains, ResultCIDto.class);
 
                     // condition to finish task
                     if (!"PE".equals(resultDto.getResult())) {
@@ -128,9 +165,9 @@ public class CheckCampaignStatus {
                 } catch (SocketException e) {
                     // do nothing during network problem. Wait the timeout to shutdown, and notify the error to logEvent
                     logEvent.log("", e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e), "");
-                } catch(IOException e) {
+                } catch (IOException e) {
                     // do nothing if it an network exception, just notify it
-                    logEvent.log("",e.getMessage(),"");
+                    logEvent.log("", e.getMessage(), "");
                 } catch (Exception e) {
                     exceptionOnThread.set(e);
                     sch.shutdown();
