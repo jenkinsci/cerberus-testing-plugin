@@ -64,6 +64,7 @@ public class CheckCampaignStatus {
      *
      * @param tagCerberus the tag use when campaign was added to cerberus queue
      * @param urlCerberus url of cerberus (ex : http://cerberus/Cerberus)
+     * @param apikey apikey to be used in order to authorize all API calls to Cerberus.
      */
     public CheckCampaignStatus(final String tagCerberus, final String urlCerberus, final String apikey) {
         this(tagCerberus, urlCerberus, apikey, Constantes.TIME_TO_REFRESH_CAMPAIGN_STATUS_DEFAULT, Constantes.TIMEOUT_FOR_CAMPAIGN_EXECUTION);
@@ -128,28 +129,8 @@ public class CheckCampaignStatus {
                     conn.setRequestProperty("apikey", apikey);
                     conn.setRequestMethod("GET");
                     conn.connect();
-                    int code = conn.getResponseCode();
 
-                    StringBuilder sb;
-                    sb = new StringBuilder();
-                    String output;
-
-                    InputStream inputStream;
-                    if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
-                        inputStream = conn.getInputStream();
-                    } else {
-                        inputStream = conn.getErrorStream();
-                    }
-
-                    try (InputStreamReader s = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {
-                        try (BufferedReader br = new BufferedReader(s)) {
-                            while ((output = br.readLine()) != null) {
-                                sb.append(output);
-                            }
-                        }
-                    }
-
-                    String contains = sb.toString();
+                    String contains = getBody(conn);
 
                     ResultCIDto resultDto = new ObjectMapper().readValue(contains, ResultCIDto.class);
 
@@ -185,6 +166,35 @@ public class CheckCampaignStatus {
         if (exceptionOnThread.get() != null) {
             throw exceptionOnThread.get();
         }
+    }
+
+    private String getBody(HttpURLConnection conn) throws Exception {
+
+        StringBuilder sb;
+        sb = new StringBuilder();
+        String output;
+
+        InputStream inputStream;
+        if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
+            inputStream = conn.getInputStream();
+        } else {
+            inputStream = conn.getErrorStream();
+        }
+        if (inputStream == null) {
+            throw new Exception();
+        }
+
+        try (InputStreamReader s = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(s)) {
+                while ((output = br.readLine()) != null) {
+                    sb.append(output);
+                }
+            }
+        }
+
+        String contains = sb.toString();
+
+        return contains;
     }
 
     /**
