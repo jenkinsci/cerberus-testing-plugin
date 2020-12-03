@@ -52,8 +52,8 @@ public class CheckCampaignStatusTest {
     private LogEvent logEvent;
 
 //    @Rule
-    private ResourceFile checkCampaignFinishJson = new ResourceFile("/org/cerberus/launchcampaign/checkCampaign/checkCampaignFinish.json");
-    private ResourceFile checkCampaignInProgressJson = new ResourceFile("/org/cerberus/launchcampaign/checkCampaign/checkCampaignInProgress.json");
+    private ResourceFile checkCampaignFinishJson = new ResourceFile("/org/cerberus/launchcampaign/checkcampaign/checkCampaignFinish.json");
+    private ResourceFile checkCampaignInProgressJson = new ResourceFile("/org/cerberus/launchcampaign/checkcampaign/checkCampaignInProgress.json");
 
     @Before
     public void before() {
